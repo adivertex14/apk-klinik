@@ -169,19 +169,6 @@ class _PerjanjianPageState extends State<PerjanjianPage> {
               ],
             ),
           );
-
-          // return ListTile(
-          //   title: Text(perjanjian.namaPasien),
-          //   subtitle: Text(
-          //     'Usia: ${perjanjian.usia}\n'
-          //     'Jenis Kelamin: ${perjanjian.gender}\n'
-          //     'No HP: ${perjanjian.noHandphone}\n'
-          //     'Poliklinik: ${perjanjian.poliklinik}\n'
-          //     'Tanggal: ${DateFormat('dd-MM-yyyy').format(perjanjian.tanggalKunjungan)}\n'
-          //     'Jam: ${perjanjian.jamKunjungan}',
-          //   ),
-          //   isThreeLine: true,
-          // );
         },
       ),
     );

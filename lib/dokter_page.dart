@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter_klinik/main_page.dart';
 import 'package:flutter_klinik/mydrawer.dart';
 import 'package:flutter_klinik/pencarian.dart';
@@ -6,6 +8,45 @@ import 'package:flutter_klinik/tentang_aplikasi.dart';
 import 'package:flutter_klinik/profil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: DokterPage(),
+    );
+  }
+}
+
+class Dokter {
+  final int id;
+  final String namaDokter;
+  final String namaKlinik;
+  final String fotoDokter;
+
+  Dokter({
+    required this.id,
+    required this.namaDokter,
+    required this.namaKlinik,
+    required this.fotoDokter,
+  });
+
+  factory Dokter.fromJson(Map<String, dynamic> json) {
+    return Dokter(
+      id: int.parse(json['id']),
+      namaDokter: json['nama_dokter'],
+      namaKlinik: json['nama_klinik'],
+      fotoDokter: json['foto_dokter'],
+    );
+  }
+}
 
 class DokterPage extends StatefulWidget {
   const DokterPage({super.key});
@@ -16,76 +57,26 @@ class DokterPage extends StatefulWidget {
 
 class _DokterPageState extends State<DokterPage> {
   int _selectedIndex = 0;
-  final List<DataDokter> namaDokter = [
-    DataDokter(
-        nama: 'dr. Rizky Caranggono.MARS',
-        poli: 'Poliklinik Umum',
-        foto: 'Assets/image/dr_umum_rizky.jpg'),
-    DataDokter(
-        nama: 'dr. Meylin Purnamasari',
-        poli: 'Poliklinik Umum',
-        foto: 'Assets/image/dr_umum_meylin.jpg'),
-    DataDokter(
-        nama: 'dr. Sri Devi',
-        poli: 'Poliklinik Umum',
-        foto: 'Assets/image/dr_umum_sri.jpg'),
-    DataDokter(
-        nama: 'drg. Edwina Maharani',
-        poli: 'Poliklinik Gigi',
-        foto: 'Assets/image/dr_gigi_edwina.png'),
-    DataDokter(
-        nama: 'drg. Valentine Rosadi',
-        poli: 'Poliklinik Gigi',
-        foto: 'Assets/image/dr_gigi_valentine.png'),
-    DataDokter(
-        nama: 'drg. Welliam',
-        poli: 'Poliklinik Gigi',
-        foto: 'Assets/image/dr_gigi_weliam.png'),
-    DataDokter(
-        nama: 'dr. Andreas, Sp.PD',
-        poli: 'Poliklinik Penyakit Dalam',
-        foto: 'Assets/image/dr_dalam_andreas.png'),
-    DataDokter(
-        nama: 'dr. Mulfi Azmi, Sp.PD',
-        poli: 'Poliklinik Penyakit Dalam',
-        foto: 'Assets/image/dr_dalam_mulfi.png'),
-    DataDokter(
-        nama: 'dr. Nanda Putri R, Sp.PD',
-        poli: 'Poliklinik Penyakit Dalam',
-        foto: 'Assets/image/dr_dalam_nanda.png'),
-    DataDokter(
-        nama: 'dr. A. Azis S, Sp.A., M.Kes.,',
-        poli: 'Poliklinik Anak',
-        foto: 'Assets/image/dr_anak_azis.png'),
-    DataDokter(
-        nama: 'dr. Olga Vicetria P, Sp.A',
-        poli: 'Poliklinik Anak',
-        foto: 'Assets/image/dr_anak_olga.png'),
-    DataDokter(
-        nama: 'dr. Yulia Ismail, Sp.A., M.Kes.',
-        poli: 'Poliklinik Anak',
-        foto: 'Assets/image/dr_anak_yulia.png'),
-    DataDokter(
-        nama: 'dr. Deasy Wirasiti, Sp.P',
-        poli: 'Poliklinik Paru',
-        foto: 'Assets/image/dr_paru_deasy.png'),
-    DataDokter(
-        nama: 'dr. Evy Yuniawati, Sp.P',
-        poli: 'Poliklinik Paru',
-        foto: 'Assets/image/dr_paru_evi.jpg'),
-    DataDokter(
-        nama: 'dr. Andriafi Syah, Sp.M',
-        poli: 'Poliklinik Mata',
-        foto: 'Assets/image/dr_mata_andriafi.png'),
-    DataDokter(
-        nama: 'dr. Dissy Pramudita, Sp.M',
-        poli: 'Poliklinik Mata',
-        foto: 'Assets/image/dr_mata_dissy.png'),
-    DataDokter(
-        nama: 'dr. Maulina Zulkarnain, Sp.M',
-        poli: 'Poliklinik Mata',
-        foto: 'Assets/image/dr_mata_maulina.png'),
-  ];
+  late Future<List<Dokter>> dokterList;
+
+  @override
+  void initState() {
+    super.initState();
+    dokterList = fetchDokter();
+  }
+
+  Future<List<Dokter>> fetchDokter() async {
+    final response = await http
+        .get(Uri.parse('http://192.168.1.4/api_klinik/api_dokter2.php'));
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse.map((data) => Dokter.fromJson(data)).toList();
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -176,41 +167,48 @@ class _DokterPageState extends State<DokterPage> {
         centerTitle: true,
       ),
       drawer: const MyCustomDrawer(),
-      body: ListView(
-        children: namaDokter.map((hasilMapDokter) {
-          return Card(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  Container(
-                    width: 75,
-                    height: 75,
-                    decoration: BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: AssetImage(hasilMapDokter.foto),
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
+      body: FutureBuilder<List<Dokter>>(
+        future: dokterList,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final dokter = snapshot.data![index];
+                return Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              hasilMapDokter.nama,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                color: Colors.blueAccent,
+                        CircleAvatar(
+                          radius: 37.5,
+                          backgroundImage: NetworkImage(
+                              'http://192.168.1.4/' + dokter.fotoDokter),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                dokter.namaDokter,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.blueAccent,
+                                ),
                               ),
-                            ),
-                            Text(hasilMapDokter.poli),
-                          ],
+                              Text(
+                                dokter.namaKlinik,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         IconButton(
                           onPressed: () {},
@@ -222,25 +220,15 @@ class _DokterPageState extends State<DokterPage> {
                         ),
                       ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          );
-        }).toList(),
+                  ),
+                );
+              },
+            );
+          } else {
+            return const Center(child: Text('Tidak ada data'));
+          }
+        },
       ),
     );
   }
-}
-
-class DataDokter {
-  final String nama;
-  final String poli;
-  final String foto;
-
-  DataDokter({
-    required this.nama,
-    required this.poli,
-    required this.foto,
-  });
 }

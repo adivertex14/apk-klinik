@@ -4,7 +4,7 @@ import 'package:flutter_klinik/form_daftar.dart';
 import 'package:flutter_klinik/info_page.dart';
 
 import 'package:flutter_klinik/mydrawer.dart';
-import 'package:flutter_klinik/pasien_page.dart';
+import 'package:flutter_klinik/pasien.dart';
 
 import 'package:flutter_klinik/perjanjian_page.dart';
 import 'package:flutter_klinik/tentang_page.dart';
@@ -199,7 +199,7 @@ class _MainPageState extends State<MainPage> {
                         Fluttertoast.showToast(msg: "Anda Memilih Menu Pasien");
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return const DaftarPasien();
+                          return const Pasien();
                         }));
                       },
                       child: Card(
