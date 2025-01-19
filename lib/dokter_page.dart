@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_klinik/main_page.dart';
-import 'package:flutter_klinik/mydrawer.dart';
+import 'package:flutter_klinik/pasien/widgets/mydrawer.dart';
 import 'package:flutter_klinik/pencarian.dart';
 import 'package:flutter_klinik/tentang_aplikasi.dart';
 import 'package:flutter_klinik/profil.dart';

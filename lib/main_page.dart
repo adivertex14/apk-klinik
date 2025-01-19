@@ -3,8 +3,8 @@ import 'package:flutter_klinik/dokter_page.dart';
 import 'package:flutter_klinik/form_daftar.dart';
 import 'package:flutter_klinik/info_page.dart';
 
-import 'package:flutter_klinik/mydrawer.dart';
-import 'package:flutter_klinik/pasien.dart';
+import 'package:flutter_klinik/pasien/widgets/mydrawer.dart';
+import 'package:flutter_klinik/pasien/pasien.dart';
 
 import 'package:flutter_klinik/perjanjian_page.dart';
 import 'package:flutter_klinik/tentang_page.dart';

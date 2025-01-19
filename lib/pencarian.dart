@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_klinik/main_page.dart';
-import 'package:flutter_klinik/mydrawer.dart';
+import 'package:flutter_klinik/pasien/widgets/mydrawer.dart';
 import 'package:flutter_klinik/tentang_aplikasi.dart';
 import 'package:flutter_klinik/profil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,7 +14,7 @@ class Pencarian extends StatefulWidget {
 }
 
 class _PendaftaranState extends State<Pencarian> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

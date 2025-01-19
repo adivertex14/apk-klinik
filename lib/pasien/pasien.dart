@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_klinik/edit_pasien.dart';
+import 'package:flutter_klinik/pasien/edit_pasien.dart';
 import 'package:flutter_klinik/main_page.dart';
 import 'package:flutter_klinik/pencarian.dart';
 import 'package:flutter_klinik/profil.dart';
-import 'package:flutter_klinik/tambah_pasien.dart';
+import 'package:flutter_klinik/pasien/tambah_pasien.dart';
 import 'package:flutter_klinik/tentang_aplikasi.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';

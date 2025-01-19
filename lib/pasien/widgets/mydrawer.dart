@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_klinik/header_drawer.dart';
+import 'package:flutter_klinik/pasien/widgets/header_drawer.dart';
 import 'package:flutter_klinik/kritik.dart';
 import 'package:flutter_klinik/login.dart';
 import 'package:flutter_klinik/main_page.dart';

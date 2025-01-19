@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_klinik/main_page.dart';
-import 'package:flutter_klinik/mydrawer.dart';
+import 'package:flutter_klinik/pasien/widgets/mydrawer.dart';
 import 'package:flutter_klinik/pencarian.dart';
 import 'package:flutter_klinik/tentang_aplikasi.dart';
 // import 'package:flutter_klinik/profil.dart';
@@ -15,7 +15,7 @@ class Profil extends StatefulWidget {
 }
 
 class _SettingState extends State<Profil> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 3;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

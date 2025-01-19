@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_klinik/main_page.dart';
-import 'package:flutter_klinik/pasien.dart';
+import 'package:flutter_klinik/pasien/pasien.dart';
 import 'package:flutter_klinik/pencarian.dart';
 import 'package:flutter_klinik/profil.dart';
 import 'package:flutter_klinik/tentang_aplikasi.dart';

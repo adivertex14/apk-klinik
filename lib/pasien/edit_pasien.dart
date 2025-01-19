@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_klinik/main_page.dart';
-import 'package:flutter_klinik/pasien.dart';
+import 'package:flutter_klinik/pasien/pasien.dart';
+// import 'package:flutter_klinik/pasien.dart';
 import 'package:flutter_klinik/pencarian.dart';
 import 'package:flutter_klinik/profil.dart';
 import 'package:flutter_klinik/tentang_aplikasi.dart';
@@ -11,46 +12,68 @@ import 'package:intl/intl.dart';
 
 enum JenisKelamin { lakiLaki, perempuan }
 
-class TambahPasien extends StatefulWidget {
-  const TambahPasien({super.key});
+class EditPasien extends StatefulWidget {
+  final Map listData;
+  const EditPasien({super.key, required this.listData});
 
   @override
-  State<TambahPasien> createState() => _TambahPasienState();
+  State<EditPasien> createState() => _EditPasienState();
 }
 
-class _TambahPasienState extends State<TambahPasien> {
+class _EditPasienState extends State<EditPasien> {
   int _selectedIndex = 0;
   JenisKelamin? _jenisKelamin;
 
   final formKey = GlobalKey<FormState>();
+  final _idController = TextEditingController();
   final _namaController = TextEditingController();
-  // final _genderController = TextEditingController();
   final _tanggalController = TextEditingController();
   final _hpController = TextEditingController();
-  Future<bool> _simpan() async {
+
+  @override
+  void initState() {
+    super.initState();
+    _idController.text = widget.listData['id'];
+    _namaController.text = widget.listData['nama_pasien'];
+    _jenisKelamin = widget.listData['jenis_kelamin'] == 'laki-laki'
+        ? JenisKelamin.lakiLaki
+        : JenisKelamin.perempuan;
+    _tanggalController.text = widget.listData['tgl_lahir'];
+    _hpController.text = widget.listData['no_hp'];
+
+    // Debugging
+    print("Jenis Kelamin: $_jenisKelamin");
+    print("Tanggal Lahir: ${_tanggalController.text}");
+  }
+
+  Future<bool> _ubah() async {
     try {
+      final dataToSend = {
+        "id": _idController.text, // Tambahkan ID di sini
+        "nama_pasien": _namaController.text,
+        "jenis_kelamin":
+            _jenisKelamin == JenisKelamin.lakiLaki ? 'laki-laki' : 'perempuan',
+        "tgl_lahir": _tanggalController.text,
+        "no_hp": _hpController.text,
+      };
+
+      print("Data dikirim ke API: $dataToSend"); // Debugging
+
       final respon = await http.post(
-        Uri.parse('http://192.168.1.4/api_klinik/create_pasien.php'),
-        body: {
-          "nama_pasien": _namaController.text,
-          "jenis_kelamin": _jenisKelamin?.toString(), // Update if using gender
-          "tgl_lahir": _tanggalController.text,
-          "no_hp": _hpController.text,
-        },
+        Uri.parse('http://192.168.1.4/api_klinik/edit_pasien.php'),
+        body: dataToSend,
       );
       if (respon.statusCode == 200) {
+        print("Response dari API: ${respon.body}"); // Debugging
         return true;
       } else {
         throw Exception(
             'Failed to save data. Status code: ${respon.statusCode}');
       }
     } catch (error) {
-      // Handle network or server errors here
       print(error);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Terjadi kesalahan saat menyimpan data"),
-        ),
+        const SnackBar(content: Text("Terjadi kesalahan saat menyimpan data")),
       );
       return false;
     }
@@ -148,7 +171,7 @@ class _TambahPasienState extends State<TambahPasien> {
         ),
       ),
       appBar: AppBar(
-        title: const Text("Tambah Data Pasien"),
+        title: const Text("Ubah Data Pasien"),
       ),
       body: Form(
         key: formKey,
@@ -160,18 +183,13 @@ class _TambahPasienState extends State<TambahPasien> {
                 controller: _namaController,
                 decoration: InputDecoration(
                   hintText: 'Nama Pasien',
-                  hintStyle: const TextStyle(color: Colors.grey),
                   label: const Text("Nama Pasien"),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Nama harus diisi";
-                  } else {}
-                  return null;
-                },
+                validator: (value) =>
+                    value!.isEmpty ? "Nama harus diisi" : null,
               ),
               const SizedBox(height: 20),
               DropdownButtonFormField<JenisKelamin>(
@@ -187,7 +205,7 @@ class _TambahPasienState extends State<TambahPasien> {
                     _jenisKelamin = newValue;
                   });
                 },
-                items: JenisKelamin.values.map((JenisKelamin value) {
+                items: JenisKelamin.values.map((value) {
                   return DropdownMenuItem<JenisKelamin>(
                     value: value,
                     child: Text(value == JenisKelamin.lakiLaki
@@ -195,12 +213,8 @@ class _TambahPasienState extends State<TambahPasien> {
                         : 'Perempuan'),
                   );
                 }).toList(),
-                validator: (value) {
-                  if (value == null) {
-                    return 'Jenis kelamin harus diisi';
-                  }
-                  return null;
-                },
+                validator: (value) =>
+                    value == null ? 'Jenis kelamin harus diisi' : null,
               ),
               const SizedBox(height: 20),
               GestureDetector(
@@ -210,17 +224,12 @@ class _TambahPasienState extends State<TambahPasien> {
                     controller: _tanggalController,
                     decoration: InputDecoration(
                       labelText: "Tanggal Lahir",
-                      hintStyle: const TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Tanggal Lahir harus diisi";
-                      }
-                      return null;
-                    },
+                    validator: (value) =>
+                        value!.isEmpty ? "Tanggal Lahir harus diisi" : null,
                   ),
                 ),
               ),
@@ -229,40 +238,41 @@ class _TambahPasienState extends State<TambahPasien> {
                 controller: _hpController,
                 decoration: InputDecoration(
                   hintText: 'No HP',
-                  hintStyle: const TextStyle(color: Colors.grey),
                   label: const Text("No HP"),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
+                keyboardType: TextInputType.phone,
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "No HP harus diisi";
+                  } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                    return "No HP hanya boleh berisi angka";
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 20),
-              Container(
+              SizedBox(
                 height: 60,
                 width: 400,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
                       backgroundColor: Colors.blueAccent,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20))),
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
-                      _simpan().then((value) {
+                      _ubah().then((value) {
                         if (value) {
                           const snackbar = SnackBar(
-                            content: Text("Data berhasil disimpan"),
+                            content: Text("Data berhasil diubah"),
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackbar);
                         } else {
                           const snackbar = SnackBar(
-                            content: Text("Data gagal disimpan"),
+                            content: Text("Data gagal diubah"),
                           );
                           ScaffoldMessenger.of(context).showSnackBar(snackbar);
                         }
@@ -275,8 +285,11 @@ class _TambahPasienState extends State<TambahPasien> {
                     }
                   },
                   child: const Text(
-                    "SIMPAN",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    "UBAH",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ),
               ),
