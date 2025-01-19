@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_klinik/main_page.dart';
 import 'package:flutter_klinik/pasien.dart';
+// import 'package:flutter_klinik/pasien.dart';
 import 'package:flutter_klinik/pencarian.dart';
 import 'package:flutter_klinik/profil.dart';
 import 'package:flutter_klinik/tentang_aplikasi.dart';
@@ -28,95 +29,73 @@ class _EditPasienState extends State<EditPasien> {
   final _namaController = TextEditingController();
   final _tanggalController = TextEditingController();
   final _hpController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _idController.text = widget.listData['id'];
+    _namaController.text = widget.listData['nama_pasien'];
+    _jenisKelamin = widget.listData['jenis_kelamin'] == 'laki-laki'
+        ? JenisKelamin.lakiLaki
+        : JenisKelamin.perempuan;
+    _tanggalController.text = widget.listData['tgl_lahir'];
+    _hpController.text = widget.listData['no_hp'];
+
+    // Debugging
+    print("Jenis Kelamin: $_jenisKelamin");
+    print("Tanggal Lahir: ${_tanggalController.text}");
+  }
+
   Future<bool> _ubah() async {
     try {
+      final dataToSend = {
+        "id": _idController.text, // Tambahkan ID di sini
+        "nama_pasien": _namaController.text,
+        "jenis_kelamin":
+            _jenisKelamin == JenisKelamin.lakiLaki ? 'laki-laki' : 'perempuan',
+        "tgl_lahir": _tanggalController.text,
+        "no_hp": _hpController.text,
+      };
+
+      print("Data dikirim ke API: $dataToSend"); // Debugging
+
       final respon = await http.post(
         Uri.parse('http://192.168.1.4/api_klinik/edit_pasien.php'),
-        body: {
-          "id": _idController.text,
-          "nama_pasien": _namaController.text,
-          "jenis_kelamin": _jenisKelamin?.toString(), // Update if using gender
-          "tgl_lahir": _tanggalController.text,
-          "no_hp": _hpController.text,
-        },
+        body: dataToSend,
       );
       if (respon.statusCode == 200) {
+        print("Response dari API: ${respon.body}"); // Debugging
         return true;
       } else {
         throw Exception(
             'Failed to save data. Status code: ${respon.statusCode}');
       }
     } catch (error) {
-      // Handle network or server errors here
       print(error);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Terjadi kesalahan saat menyimpan data"),
-        ),
+        const SnackBar(content: Text("Terjadi kesalahan saat menyimpan data")),
       );
       return false;
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    try {
-      DateTime parsedDate = DateTime.parse(widget.listData['tgl_lahir']);
-      _tanggalController.text = DateFormat('dd-MM-yyyy').format(parsedDate);
-    } catch (e) {
-      print('Error parsing date: $e');
-      _tanggalController.text = widget.listData['tgl_lahir'];
-    }
-  }
-
   void _selectDate(BuildContext context) async {
-    // Default tanggal awal adalah hari ini
-    DateTime initialDate = DateTime.now();
-
-    // Cek apakah _tanggalController memiliki teks dan parse menjadi DateTime
-    if (_tanggalController.text.isNotEmpty) {
-      try {
-        initialDate = DateFormat('dd-MM-yyyy').parse(_tanggalController.text);
-      } catch (e) {
-        print("Error parsing date: $e");
-      }
-    }
-
-    // Pastikan initialDate tidak sebelum firstDate
-    DateTime firstDate = DateTime(2000); // Tanggal minimum yang diizinkan
-    if (initialDate.isBefore(firstDate)) {
-      initialDate = firstDate;
-    }
-
-    // Tampilkan DatePicker
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: initialDate,
-      firstDate: firstDate,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
 
-    // Jika tanggal dipilih, perbarui teks pada _tanggalController
     if (pickedDate != null) {
-      print("Picked Date: ${pickedDate.toString()}"); // Debugging
       setState(() {
-        _tanggalController.text = DateFormat('dd-MM-yyyy').format(pickedDate);
+        _tanggalController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    _idController.text = widget.listData['id'];
-    _namaController.text = widget.listData['nama_pasien'];
-    _jenisKelamin =
-        widget.listData['jenis_kelamin'].toLowerCase() == 'laki-laki'
-            ? JenisKelamin.lakiLaki
-            : JenisKelamin.perempuan;
-
-    // Hapus pengaturan ulang _tanggalController.text di sini
-    _hpController.text = widget.listData['no_hp'];
     return Scaffold(
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -204,18 +183,13 @@ class _EditPasienState extends State<EditPasien> {
                 controller: _namaController,
                 decoration: InputDecoration(
                   hintText: 'Nama Pasien',
-                  hintStyle: const TextStyle(color: Colors.grey),
                   label: const Text("Nama Pasien"),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Nama harus diisi";
-                  } else {}
-                  return null;
-                },
+                validator: (value) =>
+                    value!.isEmpty ? "Nama harus diisi" : null,
               ),
               const SizedBox(height: 20),
               DropdownButtonFormField<JenisKelamin>(
@@ -231,20 +205,16 @@ class _EditPasienState extends State<EditPasien> {
                     _jenisKelamin = newValue;
                   });
                 },
-                items: JenisKelamin.values.map((JenisKelamin value) {
+                items: JenisKelamin.values.map((value) {
                   return DropdownMenuItem<JenisKelamin>(
                     value: value,
                     child: Text(value == JenisKelamin.lakiLaki
-                        ? 'laki-laki'
-                        : 'perempuan'),
+                        ? 'Laki-laki'
+                        : 'Perempuan'),
                   );
                 }).toList(),
-                validator: (value) {
-                  if (value == null) {
-                    return 'Jenis kelamin harus diisi';
-                  }
-                  return null;
-                },
+                validator: (value) =>
+                    value == null ? 'Jenis kelamin harus diisi' : null,
               ),
               const SizedBox(height: 20),
               GestureDetector(
@@ -254,17 +224,12 @@ class _EditPasienState extends State<EditPasien> {
                     controller: _tanggalController,
                     decoration: InputDecoration(
                       labelText: "Tanggal Lahir",
-                      hintStyle: const TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Tanggal Lahir harus diisi";
-                      }
-                      return null;
-                    },
+                    validator: (value) =>
+                        value!.isEmpty ? "Tanggal Lahir harus diisi" : null,
                   ),
                 ),
               ),
@@ -273,26 +238,27 @@ class _EditPasienState extends State<EditPasien> {
                 controller: _hpController,
                 decoration: InputDecoration(
                   hintText: 'No HP',
-                  hintStyle: const TextStyle(color: Colors.grey),
                   label: const Text("No HP"),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
+                keyboardType: TextInputType.phone,
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "No HP harus diisi";
+                  } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                    return "No HP hanya boleh berisi angka";
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 20),
-              Container(
+              SizedBox(
                 height: 60,
                 width: 400,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
                       backgroundColor: Colors.blueAccent,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20))),
@@ -320,7 +286,10 @@ class _EditPasienState extends State<EditPasien> {
                   },
                   child: const Text(
                     "UBAH",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ),
               ),

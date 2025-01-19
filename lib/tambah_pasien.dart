@@ -9,7 +9,10 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-enum JenisKelamin { lakiLaki, perempuan }
+enum JenisKelamin {
+  lakiLaki,
+  perempuan,
+}
 
 class TambahPasien extends StatefulWidget {
   const TambahPasien({super.key});
@@ -19,12 +22,13 @@ class TambahPasien extends StatefulWidget {
 }
 
 class _TambahPasienState extends State<TambahPasien> {
+  // JenisKelamin? _jenisKelamin = JenisKelamin.lakiLaki;
   int _selectedIndex = 0;
   JenisKelamin? _jenisKelamin;
 
   final formKey = GlobalKey<FormState>();
   final _namaController = TextEditingController();
-  // final _genderController = TextEditingController();
+
   final _tanggalController = TextEditingController();
   final _hpController = TextEditingController();
   Future<bool> _simpan() async {
@@ -33,12 +37,24 @@ class _TambahPasienState extends State<TambahPasien> {
         Uri.parse('http://192.168.1.4/api_klinik/create_pasien.php'),
         body: {
           "nama_pasien": _namaController.text,
-          "jenis_kelamin": _jenisKelamin?.toString(), // Update if using gender
+          "jenis_kelamin": _jenisKelamin == JenisKelamin.lakiLaki
+              ? "laki-laki"
+              : "perempuan",
+          // Update if using gender
           "tgl_lahir": _tanggalController.text,
           "no_hp": _hpController.text,
         },
       );
       if (respon.statusCode == 200) {
+        print({
+          "nama_pasien": _namaController.text,
+          "jenis_kelamin": _jenisKelamin == JenisKelamin.lakiLaki
+              ? "laki-laki"
+              : "perempuan",
+          "tgl_lahir": _tanggalController.text,
+          "no_hp": _hpController.text,
+        });
+
         return true;
       } else {
         throw Exception(
@@ -60,7 +76,7 @@ class _TambahPasienState extends State<TambahPasien> {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
+      firstDate: DateTime(1950),
       lastDate: DateTime(2100),
     );
 
@@ -183,6 +199,7 @@ class _TambahPasienState extends State<TambahPasien> {
                 ),
                 value: _jenisKelamin,
                 onChanged: (JenisKelamin? newValue) {
+                  print(_jenisKelamin);
                   setState(() {
                     _jenisKelamin = newValue;
                   });
@@ -191,8 +208,8 @@ class _TambahPasienState extends State<TambahPasien> {
                   return DropdownMenuItem<JenisKelamin>(
                     value: value,
                     child: Text(value == JenisKelamin.lakiLaki
-                        ? 'Laki-laki'
-                        : 'Perempuan'),
+                        ? 'laki-laki'
+                        : 'perempuan'),
                   );
                 }).toList(),
                 validator: (value) {
