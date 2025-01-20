@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_klinik/login.dart';
-// import 'package:flutter_klinik/pasien.dart';
-// import 'package:flutter_klinik/splash.dart';
+import 'package:flutter_klinik/splash.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Login(),
+      home: SplashScreen(),
     );
   }
 }

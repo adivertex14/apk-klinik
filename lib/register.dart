@@ -15,7 +15,7 @@ class _RegisterState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> registerUser(String username, String password) async {
-    final url = Uri.parse('http://192.168.1.4/api_klinik/register.php');
+    final url = Uri.parse('http://192.168.75.7/api_klinik/register.php');
     try {
       final response = await http.post(
         url,

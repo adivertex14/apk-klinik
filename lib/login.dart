@@ -18,7 +18,9 @@ class _LoginState extends State<Login> {
   Future<void> _login() async {
     try {
       final response = await http.post(
-        Uri.parse("http://192.168.1.4/api_klinik/login.php"),
+        // Uri.parse("http://192.168.1.4/api_klinik/login.php"),
+        // Uri.parse("http://10.205.66.159/api_klinik/login.php"),
+        Uri.parse("http://192.168.75.7/api_klinik/login.php"),
         body: {
           "username": userController.text,
           "password": passwordController.text,
@@ -65,19 +67,19 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlue[50],
+      backgroundColor: Colors.lightBlue[100],
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 130),
+            const SizedBox(height: 50),
             Container(
               padding:
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 100),
-              height: 300,
+              height: 345,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  fit: BoxFit.contain,
-                  image: AssetImage("Assets/image/logo_trans.png"),
+                  fit: BoxFit.cover,
+                  image: AssetImage("Assets/image/klinik3d.png"),
                 ),
               ),
             ),
@@ -107,6 +109,7 @@ class _LoginState extends State<Login> {
                   TextField(
                     controller: userController,
                     decoration: InputDecoration(
+                      suffixIcon: const Icon(Icons.person_4),
                       labelText: 'Username',
                       hintText: 'Masukkan Username',
                       border: OutlineInputBorder(
@@ -119,6 +122,7 @@ class _LoginState extends State<Login> {
                     controller: passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
+                      suffixIcon: const Icon(Icons.lock),
                       labelText: 'Password',
                       hintText: 'Masukkan Password',
                       border: OutlineInputBorder(
@@ -141,7 +145,8 @@ class _LoginState extends State<Login> {
                       ),
                       child: const Text(
                         "MASUK",
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -165,7 +170,8 @@ class _LoginState extends State<Login> {
                       ),
                       child: const Text(
                         "BUAT AKUN",
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),

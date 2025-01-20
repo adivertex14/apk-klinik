@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_klinik/dokter_page.dart';
 import 'package:flutter_klinik/form_daftar.dart';
 import 'package:flutter_klinik/info_page.dart';
+import 'package:flutter_klinik/widgets/bottomnavbar.dart';
 
-import 'package:flutter_klinik/pasien/widgets/mydrawer.dart';
+import 'package:flutter_klinik/widgets/mydrawer.dart';
 import 'package:flutter_klinik/pasien/pasien.dart';
 
 import 'package:flutter_klinik/perjanjian_page.dart';
@@ -29,6 +30,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const BottomNavBar(selectedIndex: 0),
       appBar: AppBar(
         title: const Text(
           "Beranda",
@@ -81,19 +83,6 @@ class _MainPageState extends State<MainPage> {
                   )
                 ],
               ),
-              // const SizedBox(height: 2), // Jarak antara Row dan gambar
-              // Gambar statis di bawah Row
-              // Container(
-              //   height: 150, // Sesuaikan tinggi gambar
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(10),
-              //     image: const DecorationImage(
-              //       image: AssetImage(
-              //           'Assets/image/ban_umum.jpg'), // Sesuaikan path gambar
-              //       fit: BoxFit.cover,
-              //     ),
-              //   ),
-              // ),
 
               CarouselSlider(
                 options: CarouselOptions(

@@ -2,13 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_klinik/pasien/edit_pasien.dart';
-import 'package:flutter_klinik/main_page.dart';
-import 'package:flutter_klinik/pencarian.dart';
-import 'package:flutter_klinik/profil.dart';
+
 import 'package:flutter_klinik/pasien/tambah_pasien.dart';
-import 'package:flutter_klinik/tentang_aplikasi.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:flutter_klinik/widgets/bottomnavbar.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
@@ -20,8 +16,6 @@ class Pasien extends StatefulWidget {
 }
 
 class _PasienState extends State<Pasien> {
-  int _selectedIndex = 0;
-
   String formatTanggal(String tanggal) {
     try {
       DateTime parsedDate = DateTime.parse(tanggal); // Parsing tanggal
@@ -37,7 +31,8 @@ class _PasienState extends State<Pasien> {
   Future _getData() async {
     try {
       final respon = await http
-          .get(Uri.parse('http://192.168.1.4/api_klinik/read_pasien.php'));
+          // .get(Uri.parse('http://192.168.1.4/api_klinik/read_pasien.php'));
+          .get(Uri.parse('http://192.168.75.7/api_klinik/read_pasien.php'));
       if (respon.statusCode == 200) {
         // print(respon.body);
         final data = jsonDecode(respon.body);
@@ -46,6 +41,23 @@ class _PasienState extends State<Pasien> {
           _isLoading = false;
         });
       }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future _hapus(String nama) async {
+    try {
+      final respon = await http
+          // .get(Uri.parse('http://192.168.1.4/api_klinik/read_pasien.php'));
+          .post(Uri.parse('http://192.168.75.7/api_klinik/hapus_pasien.php'),
+              body: {
+            "nama_pasien": nama,
+          });
+      if (respon.statusCode == 200) {
+        return true;
+      }
+      return false;
     } catch (e) {
       print(e);
     }
@@ -62,79 +74,7 @@ class _PasienState extends State<Pasien> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Colors.black.withOpacity(.4),
-            )
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GNav(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-            gap: 5,
-            rippleColor: Colors.grey[300]!,
-            hoverColor: Colors.grey[100]!,
-            backgroundColor: Colors.white,
-            activeColor: Colors.white,
-            tabBackgroundColor: Colors.lightBlue,
-            tabs: [
-              GButton(
-                icon: Icons.home,
-                text: 'Beranda',
-                onPressed: () {
-                  Fluttertoast.showToast(msg: "Anda Kembali ke Halaman Utama");
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const MainPage();
-                  }));
-                },
-              ),
-              GButton(
-                icon: Icons.search,
-                text: 'Pencarian',
-                onPressed: () {
-                  Fluttertoast.showToast(
-                      msg: "Anda Beralih ke Halaman Pencarian");
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const Pencarian();
-                  }));
-                },
-              ),
-              GButton(
-                icon: Icons.android_rounded,
-                text: 'Tentang Aplikasi',
-                onPressed: () {
-                  Fluttertoast.showToast(
-                      msg: "Anda Beralih ke Halaman Tentang Aplikasi");
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const TentangAplikasi();
-                  }));
-                },
-              ),
-              GButton(
-                icon: Icons.account_circle,
-                text: 'Profil',
-                onPressed: () {
-                  Fluttertoast.showToast(msg: "Anda Beralih ke Halaman Profil");
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const Profil();
-                  }));
-                },
-              ),
-            ],
-            selectedIndex: _selectedIndex,
-            onTabChange: (index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
-          ),
-        ),
-      ),
+      bottomNavigationBar: const BottomNavBar(selectedIndex: 2),
       appBar: AppBar(
         title: const Text(
           "Daftar Pasien Terdaftar",
@@ -187,22 +127,22 @@ class _PasienState extends State<Pasien> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: ((context) => EditPasien(
-                                                listData: {
-                                                  "id": _listdata[index]['id'],
-                                                  "nama_pasien":
-                                                      _listdata[index]
-                                                          ['nama_pasien'],
-                                                  "jenis_kelamin":
-                                                      _listdata[index]
-                                                          ['jenis_kelamin'],
-                                                  "tgl_lahir": formatTanggal(
-                                                      _listdata[index]
-                                                          ['tgl_lahir']),
-                                                  "no_hp": _listdata[index]
-                                                      ['no_hp'],
-                                                },
-                                              ))));
+                                        builder: ((context) => EditPasien(
+                                              listData: {
+                                                "id": _listdata[index]['id'],
+                                                "nama_pasien": _listdata[index]
+                                                    ['nama_pasien'],
+                                                "jenis_kelamin":
+                                                    _listdata[index]
+                                                        ['jenis_kelamin'],
+                                                "tgl_lahir": formatTanggal(
+                                                    _listdata[index]
+                                                        ['tgl_lahir']),
+                                                "no_hp": _listdata[index]
+                                                    ['no_hp'],
+                                              },
+                                            )),
+                                      ));
                                 },
                                 child: const Icon(
                                   Icons.edit,
@@ -211,11 +151,62 @@ class _PasienState extends State<Pasien> {
                                 ),
                               ),
                               InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: ((context) {
+                                        return AlertDialog(
+                                          content: const Text(
+                                              "Anda ingin menghapus data pasien?"),
+                                          actions: [
+                                            ElevatedButton(
+                                                onPressed: () {
+                                                  _hapus(_listdata[index]
+                                                          ['nama_pasien'])
+                                                      .then((value) {
+                                                    if (value) {
+                                                      const snackbar = SnackBar(
+                                                        content: Text(
+                                                            "Data Pasien berhasil dihapus"),
+                                                      );
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              snackbar);
+                                                    } else {
+                                                      const snackbar = SnackBar(
+                                                        content: Text(
+                                                            "Data Pasien gagal dihapus"),
+                                                      );
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              snackbar);
+                                                    }
+                                                  });
+                                                  Navigator.pushAndRemoveUntil(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const Pasien()),
+                                                    (Route<dynamic> route) =>
+                                                        false,
+                                                  );
+                                                },
+                                                child: const Text("Hapus")),
+                                            ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text("Tidak")),
+                                          ],
+                                        );
+                                      }));
+                                },
                                 child: const Icon(
                                   Icons.delete,
                                   size: 30,
-                                  color: Colors.blueAccent,
+                                  color: Colors.red,
                                 ),
                               )
                             ],
