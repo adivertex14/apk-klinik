@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_klinik/main_page.dart';
-import 'package:flutter_klinik/register.dart';
+// import 'package:flutter_klinik/register.dart';
+import 'package:flutter_klinik/register2.dart';
 import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
@@ -161,7 +162,7 @@ class _LoginState extends State<Login> {
                       onPressed: () {
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) {
-                          return const RegisterPage();
+                          return const DaftarAkun();
                         }));
                       },
                       style: ElevatedButton.styleFrom(

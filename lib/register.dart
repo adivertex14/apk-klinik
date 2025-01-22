@@ -1,238 +1,658 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_klinik/login.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
-
-  @override
-  State<RegisterPage> createState() => _RegisterState();
+enum JenisKelamin {
+  lakiLaki,
+  perempuan,
 }
 
-class _RegisterState extends State<RegisterPage> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+class DaftarAkun extends StatefulWidget {
+  const DaftarAkun({super.key});
 
-  Future<void> registerUser(String username, String password) async {
-    final url = Uri.parse('http://192.168.75.7/api_klinik/register.php');
+  @override
+  State<DaftarAkun> createState() => _DaftarAkunState();
+}
+
+class _DaftarAkunState extends State<DaftarAkun> {
+  JenisKelamin? _jenisKelamin;
+
+  final formKey = GlobalKey<FormState>();
+  final _userController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _namaController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _alamatController = TextEditingController();
+  final _hpController = TextEditingController();
+
+  Future<bool> _simpan() async {
     try {
-      final response = await http.post(
-        url,
+      final respon = await http.post(
+// Uri.parse('http://192.168.1.4/api_klinik/create_pasien.php'),
+        Uri.parse('http://192.168.75.7/api_klinik/register_user.php'),
+
         body: {
-          'username': username,
-          'password': password,
+          "username": _userController.text,
+          "password": _passwordController.text,
+          "nama_lengkap": _namaController.text,
+          "email": _emailController.text,
+          "jenis_kelamin": _jenisKelamin == JenisKelamin.lakiLaki
+              ? "laki-laki"
+              : "perempuan",
+          "alamat": _alamatController.text,
+          "no_hp": _hpController.text,
         },
       );
 
-      final data = json.decode(response.body);
+      if (respon.statusCode == 200) {
+        print({
+          "username": _userController.text,
+          "password": _passwordController.text,
+          "nama_lengkap": _namaController.text,
+          "email": _emailController.text,
+          "jenis_kelamin": _jenisKelamin == JenisKelamin.lakiLaki
+              ? "laki-laki"
+              : "perempuan",
+          "alamat": _alamatController.text,
+          "no_hp": _hpController.text,
+        });
 
-      if (response.statusCode == 200) {
-        if (data['success'] == true) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                "Selamat Anda Telah Berhasil Mendaftar",
-                textAlign: TextAlign.center,
-              ),
-            ),
-          );
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return const Login();
-          }));
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(data['message'] ?? 'Pendaftaran gagal!'),
-            ),
-          );
-        }
+        return true;
+      } else {
+        throw Exception(
+            'Failed to save data. Status code: ${respon.statusCode}');
       }
-    } catch (e) {
+    } catch (error) {
+// Handle network or server errors here
+
+      print(error);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Terjadi kesalahan saat menghubungkan ke server."),
+          content: Text("Terjadi kesalahan saat menyimpan data"),
         ),
       );
+
+      return false;
     }
   }
-
-  final snackbar = const SnackBar(
-    content: Text(
-      "Selamat Anda Telah Berhasil Mendaftar",
-      textAlign: TextAlign.center,
-    ),
-  );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.lightBlue[50],
-        body: Column(
-          children: [
-            const SizedBox(
-              height: 100,
-            ),
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 100),
-              height: 300,
-              // color: Colors.amberAccent,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.contain,
-                  image: AssetImage("Assets/image/logo_trans.png"),
+      backgroundColor: Colors.lightBlue[100],
+      body: SingleChildScrollView(
+        child: Form(
+          key: formKey,
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              "Hallo...",
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.blueAccent[400],
-              ),
-            ),
-            Text(
-              "Daftarkan Akun Pengguna Anda di Sini",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.blueAccent[400],
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: _usernameController,
-                    decoration: InputDecoration(
-                      labelText: 'Username',
-                      labelStyle: const TextStyle(fontSize: 20),
-                      hintText: 'Masukkan Username',
-                      hintStyle:
-                          const TextStyle(color: Colors.grey, fontSize: 20),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: const BorderSide(width: 5),
-                      ),
+                const CircleAvatar(
+                  radius: 70,
+                  backgroundColor: Colors.amber,
+                  child: CircleAvatar(
+                    radius: 60,
+                    backgroundColor: Colors.red,
+                    child: Text(
+                      "Tambah \nFoto \nProfil",
+                      style: TextStyle(color: Colors.white),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      labelStyle: const TextStyle(fontSize: 20),
-                      hintText: 'Masukkan Password',
-                      hintStyle:
-                          const TextStyle(color: Colors.grey, fontSize: 20),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: const BorderSide(width: 5),
-                      ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "Form Registrasi Pengguna",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueAccent[400],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  controller: _userController,
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: 'Masukkan Username',
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    label: const Text("Username"),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(10)),
-                    height: 60,
-                    width: 400,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final username = _usernameController.text;
-                        final password = _passwordController.text;
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Username harus diisi";
+                    } else {}
 
-                        if (username.isEmpty || password.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Anda Belum Mengisi Data!"),
-                            ),
-                          );
-                        } else {
-                          registerUser(username, password);
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.blueAccent[400],
-                      ),
-                      child: const Text(
-                        "BUAT AKUN",
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  obscureText: true,
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: 'Masukkan Password',
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    label: const Text("Password"),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(10)),
-                    height: 60,
-                    width: 400,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return const Login();
-                        }));
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.red[400],
-                      ),
-                      child: const Text(
-                        "SUDAH MENDAFTAR",
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Password harus diisi";
+                    } else {}
+
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _namaController,
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: 'Masukkan Nama Lengkap',
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    label: const Text("Nama Lengkap"),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                ],
-              ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Nama Lengkap harus diisi";
+                    } else {}
+
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: 'Masukkan Email',
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    label: const Text("Email"),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Email Lengkap harus diisi";
+                    } else {}
+
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                DropdownButtonFormField<JenisKelamin>(
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    labelText: 'Jenis Kelamin',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  value: _jenisKelamin,
+                  onChanged: (JenisKelamin? newValue) {
+                    print(_jenisKelamin);
+
+                    setState(() {
+                      _jenisKelamin = newValue;
+                    });
+                  },
+                  items: JenisKelamin.values.map((JenisKelamin value) {
+                    return DropdownMenuItem<JenisKelamin>(
+                      value: value,
+                      child: Text(value == JenisKelamin.lakiLaki
+                          ? 'laki-laki'
+                          : 'perempuan'),
+                    );
+                  }).toList(),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Jenis kelamin harus diisi';
+                    }
+
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _alamatController,
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: 'Masukkan Alamat',
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    label: const Text("Alamat"),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Alamat Lengkap harus diisi";
+                    } else {}
+
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _hpController,
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: 'Masukkan No HP',
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    label: const Text("No HP"),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "No HP harus diisi";
+                    }
+
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  height: 60,
+                  width: 400,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.blueAccent,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20))),
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        _simpan().then((value) {
+                          if (value) {
+                            const snackbar = SnackBar(
+                              content: Text("Pendaftaran Berhasil"),
+                            );
+
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackbar);
+                          } else {
+                            const snackbar = SnackBar(
+                              content: Text("Pendaftaran Gagal"),
+                            );
+
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackbar);
+                          }
+                        });
+
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Login()),
+                          (Route<dynamic> route) => false,
+                        );
+                      }
+                    },
+                    child: const Text(
+                      "SIMPAN",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ));
+          ),
+        ),
+      ),
+    );
   }
 }
 
 
 
 
+// import 'package:flutter/material.dart';
+// import 'package:http/http.dart' as http;
 
+// import 'package:flutter_klinik/login.dart';
 
-// ElevatedButton(
-//               onPressed: () {
-//                 Fluttertoast.showToast(msg: "Selamat, Anda Berhasil Masuk");
-//                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-//                   return const MainPage();
-//                 }));
-//               },
-//               style: ElevatedButton.styleFrom(
-//                 foregroundColor: Colors.white,
-//                 backgroundColor: Colors.red,
-//               ),
-//               child: const Text(
-//                 "Masuk",
-//                 style: TextStyle(
-//                   fontSize: 20,
+// // import 'dart.io';
+// // import 'package:image_picker/image_picker.dart';
+
+// enum JenisKelamin {
+//   lakiLaki,
+//   perempuan,
+// }
+
+// class DaftarAkun extends StatefulWidget {
+//   const DaftarAkun({super.key});
+
+//   @override
+//   State<DaftarAkun> createState() => _DaftarAkunState();
+// }
+
+// class _DaftarAkunState extends State<DaftarAkun> {
+//   JenisKelamin? _jenisKelamin;
+
+//   final formKey = GlobalKey<FormState>();
+//   final _userController = TextEditingController();
+//   final _passwordController = TextEditingController();
+//   final _namaController = TextEditingController();
+//   final _emailController = TextEditingController();
+//   final _alamatController = TextEditingController();
+//   final _hpController = TextEditingController();
+
+//   Future<bool> _simpan() async {
+//     try {
+//       final respon = await http.post(
+//         // Uri.parse('http://192.168.1.4/api_klinik/create_pasien.php'),
+//         Uri.parse('http://192.168.75.7/api_klinik/register_user.php'),
+//         body: {
+//           "username": _userController.text,
+//           "password": _passwordController.text,
+//           "nama_lengkap": _namaController.text,
+//           "email": _emailController.text,
+//           "jenis_kelamin": _jenisKelamin == JenisKelamin.lakiLaki
+//               ? "laki-laki"
+//               : "perempuan",
+//           "alamat": _alamatController.text,
+//           "no_hp": _hpController.text,
+//         },
+//       );
+//       if (respon.statusCode == 200) {
+//         print({
+//           "username": _userController.text,
+//           "password": _passwordController.text,
+//           "nama_lengkap": _namaController.text,
+//           "email": _emailController.text,
+//           "jenis_kelamin": _jenisKelamin == JenisKelamin.lakiLaki
+//               ? "laki-laki"
+//               : "perempuan",
+//           "alamat": _alamatController.text,
+//           "no_hp": _hpController.text,
+//         });
+
+//         return true;
+//       } else {
+//         throw Exception(
+//             'Failed to save data. Status code: ${respon.statusCode}');
+//       }
+//     } catch (error) {
+//       // Handle network or server errors here
+//       print(error);
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         const SnackBar(
+//           content: Text("Terjadi kesalahan saat menyimpan data"),
+//         ),
+//       );
+//       return false;
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.lightBlue[100],
+//       body: SingleChildScrollView(
+//         child: Form(
+//           key: formKey,
+//           child: Container(
+//             padding: const EdgeInsets.all(20),
+//             child: Column(
+//               children: [
+//                 const SizedBox(
+//                   height: 20,
 //                 ),
-//               ),
-//             )
+//                 const CircleAvatar(
+//                   radius: 70,
+//                   backgroundColor: Colors.amber,
+//                   child: CircleAvatar(
+//                     radius: 60,
+//                     backgroundColor: Colors.red,
+//                     child: Text(
+//                       "Tambah \nFoto \nProfil",
+//                       style: TextStyle(color: Colors.white),
+//                       textAlign: TextAlign.center,
+//                     ),
+//                   ),
+//                 ),
+//                 const SizedBox(
+//                   height: 20,
+//                 ),
+//                 Text(
+//                   "Form Registrasi Pengguna",
+//                   style: TextStyle(
+//                     fontSize: 28,
+//                     fontWeight: FontWeight.bold,
+//                     color: Colors.blueAccent[400],
+//                   ),
+//                 ),
+//                 const SizedBox(
+//                   height: 20,
+//                 ),
+//                 TextFormField(
+//                   controller: _userController,
+//                   decoration: InputDecoration(
+//                     fillColor: Colors.white,
+//                     filled: true,
+//                     hintText: 'Masukkan Username',
+//                     hintStyle: const TextStyle(color: Colors.grey),
+//                     label: const Text("Username"),
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(20),
+//                     ),
+//                   ),
+//                   validator: (value) {
+//                     if (value!.isEmpty) {
+//                       return "Username harus diisi";
+//                     } else {}
+//                     return null;
+//                   },
+//                 ),
+//                 const SizedBox(height: 20),
+//                 TextFormField(
+//                   obscureText: true,
+//                   controller: _passwordController,
+//                   decoration: InputDecoration(
+//                     fillColor: Colors.white,
+//                     filled: true,
+//                     hintText: 'Masukkan Password',
+//                     hintStyle: const TextStyle(color: Colors.grey),
+//                     label: const Text("Password"),
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(20),
+//                     ),
+//                   ),
+//                   validator: (value) {
+//                     if (value!.isEmpty) {
+//                       return "Password harus diisi";
+//                     } else {}
+//                     return null;
+//                   },
+//                 ),
+//                 const SizedBox(height: 20),
+//                 TextFormField(
+//                   controller: _namaController,
+//                   decoration: InputDecoration(
+//                     fillColor: Colors.white,
+//                     filled: true,
+//                     hintText: 'Masukkan Nama Lengkap',
+//                     hintStyle: const TextStyle(color: Colors.grey),
+//                     label: const Text("Nama Lengkap"),
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(20),
+//                     ),
+//                   ),
+//                   validator: (value) {
+//                     if (value!.isEmpty) {
+//                       return "Nama Lengkap harus diisi";
+//                     } else {}
+//                     return null;
+//                   },
+//                 ),
+//                 const SizedBox(height: 20),
+//                 TextFormField(
+//                   controller: _emailController,
+//                   decoration: InputDecoration(
+//                     fillColor: Colors.white,
+//                     filled: true,
+//                     hintText: 'Masukkan Email',
+//                     hintStyle: const TextStyle(color: Colors.grey),
+//                     label: const Text("Email"),
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(20),
+//                     ),
+//                   ),
+//                   validator: (value) {
+//                     if (value!.isEmpty) {
+//                       return "Email Lengkap harus diisi";
+//                     } else {}
+//                     return null;
+//                   },
+//                 ),
+//                 const SizedBox(height: 20),
+//                 DropdownButtonFormField<JenisKelamin>(
+//                   decoration: InputDecoration(
+//                     fillColor: Colors.white,
+//                     filled: true,
+//                     labelText: 'Jenis Kelamin',
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(20),
+//                     ),
+//                   ),
+//                   value: _jenisKelamin,
+//                   onChanged: (JenisKelamin? newValue) {
+//                     print(_jenisKelamin);
+//                     setState(() {
+//                       _jenisKelamin = newValue;
+//                     });
+//                   },
+//                   items: JenisKelamin.values.map((JenisKelamin value) {
+//                     return DropdownMenuItem<JenisKelamin>(
+//                       value: value,
+//                       child: Text(value == JenisKelamin.lakiLaki
+//                           ? 'laki-laki'
+//                           : 'perempuan'),
+//                     );
+//                   }).toList(),
+//                   validator: (value) {
+//                     if (value == null) {
+//                       return 'Jenis kelamin harus diisi';
+//                     }
+//                     return null;
+//                   },
+//                 ),
+//                 const SizedBox(height: 20),
+//                 TextFormField(
+//                   controller: _alamatController,
+//                   decoration: InputDecoration(
+//                     fillColor: Colors.white,
+//                     filled: true,
+//                     hintText: 'Masukkan Alamat',
+//                     hintStyle: const TextStyle(color: Colors.grey),
+//                     label: const Text("Alamat"),
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(20),
+//                     ),
+//                   ),
+//                   validator: (value) {
+//                     if (value!.isEmpty) {
+//                       return "Alamat Lengkap harus diisi";
+//                     } else {}
+//                     return null;
+//                   },
+//                 ),
+//                 const SizedBox(height: 20),
+//                 TextFormField(
+//                   controller: _hpController,
+//                   decoration: InputDecoration(
+//                     fillColor: Colors.white,
+//                     filled: true,
+//                     hintText: 'Masukkan No HP',
+//                     hintStyle: const TextStyle(color: Colors.grey),
+//                     label: const Text("No HP"),
+//                     border: OutlineInputBorder(
+//                       borderRadius: BorderRadius.circular(20),
+//                     ),
+//                   ),
+//                   validator: (value) {
+//                     if (value!.isEmpty) {
+//                       return "No HP harus diisi";
+//                     }
+//                     return null;
+//                   },
+//                 ),
+//                 const SizedBox(height: 20),
+//                 Container(
+//                   height: 60,
+//                   width: 400,
+//                   child: ElevatedButton(
+//                     style: ElevatedButton.styleFrom(
+//                         foregroundColor: Colors.white,
+//                         backgroundColor: Colors.blueAccent,
+//                         shape: RoundedRectangleBorder(
+//                             borderRadius: BorderRadius.circular(20))),
+//                     onPressed: () {
+//                       if (formKey.currentState!.validate()) {
+//                         _simpan().then((value) {
+//                           if (value) {
+//                             const snackbar = SnackBar(
+//                               content: Text("Pendaftaran Berhasil"),
+//                             );
+//                             ScaffoldMessenger.of(context)
+//                                 .showSnackBar(snackbar);
+//                           } else {
+//                             const snackbar = SnackBar(
+//                               content: Text("Pendaftaran Gagal"),
+//                             );
+//                             ScaffoldMessenger.of(context)
+//                                 .showSnackBar(snackbar);
+//                           }
+//                         });
+//                         Navigator.pushAndRemoveUntil(
+//                           context,
+//                           MaterialPageRoute(
+//                               builder: (context) => const Login()),
+//                           (Route<dynamic> route) => false,
+//                         );
+//                       }
+//                     },
+//                     child: const Text(
+//                       "SIMPAN",
+//                       style:
+//                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
