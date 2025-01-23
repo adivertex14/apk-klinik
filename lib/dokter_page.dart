@@ -109,7 +109,7 @@ class _DokterPageState extends State<DokterPage> {
                         CircleAvatar(
                           radius: 37.5,
                           backgroundImage: NetworkImage(
-                              'http://192.168.75.7/' + dokter.fotoDokter),
+                              'http://192.168.75.7/${dokter.fotoDokter}'),
                         ),
                         const SizedBox(width: 20),
                         Expanded(

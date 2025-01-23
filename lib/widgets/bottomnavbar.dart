@@ -9,7 +9,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 class BottomNavBar extends StatefulWidget {
   final int selectedIndex;
 
-  const BottomNavBar({Key? key, required this.selectedIndex}) : super(key: key);
+  const BottomNavBar({super.key, required this.selectedIndex});
 
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();

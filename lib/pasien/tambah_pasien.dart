@@ -181,7 +181,7 @@ class _TambahPasienState extends State<TambahPasien> {
                 },
               ),
               const SizedBox(height: 20),
-              Container(
+              SizedBox(
                 height: 60,
                 width: 400,
                 child: ElevatedButton(
