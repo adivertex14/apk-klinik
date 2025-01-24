@@ -5,6 +5,7 @@ import 'package:flutter_klinik/register.dart';
 // import 'package:flutter_klinik/register.dart';
 // import 'package:flutter_klinik/register2.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -16,6 +17,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController userController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final logger = Logger();
 
   Future<void> _login() async {
     try {
@@ -29,40 +31,51 @@ class _LoginState extends State<Login> {
         },
       );
 
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.body}");
+      logger.i("Response status: ${response.statusCode}");
+      logger.i("Response body: ${response.body}");
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
         if (data['status'] == 'success') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                "Selamat Anda Berhasil Masuk ke Aplikasi Klinik Sehati",
-                textAlign: TextAlign.center,
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  "Selamat Anda Berhasil Masuk ke Aplikasi Klinik Sehati",
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-          );
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => const MainPage(),
-            ),
-          );
+            );
+
+            final idUser = int.parse(data['data']['id']);
+            print("Data ID: ${data['data']['id']}");
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (BuildContext context) => MainPage(idUser: idUser),
+              ),
+            );
+          }
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(data['message'])),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(data['message'])),
+            );
+          }
         }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Gagal terhubung ke server")),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Gagal terhubung ke server")),
+          );
+        }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: $e")),
+        );
+      }
     }
   }
 

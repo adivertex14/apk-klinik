@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  async: ^2.11.0
   carousel_slider: ^5.0.0
   cupertino_icons: ^1.0.8
   flineicons: ^0.1.1
@@ -39,12 +40,14 @@ dependencies:
   image_picker: ^1.1.2
   intl: ^0.20.0
   line_icons: ^2.0.3
+  logger: ^2.5.0
   motion_toast: ^2.11.0
+  path: ^1.9.0
   shaky_animated_listview: ^0.0.5
   slide_rating_dialog: ^1.0.5
 
 dev_dependencies:
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
 

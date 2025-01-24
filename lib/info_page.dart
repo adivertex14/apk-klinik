@@ -4,7 +4,9 @@ import 'package:flutter_klinik/widgets/mydrawer.dart';
 import 'package:shaky_animated_listview/widgets/animated_listview.dart';
 
 class InfoPage extends StatefulWidget {
-  const InfoPage({super.key});
+  final int idUser;
+
+  const InfoPage({super.key, required this.idUser});
 
   @override
   State<InfoPage> createState() => _InfoPageState();
@@ -14,7 +16,10 @@ class _InfoPageState extends State<InfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 0),
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: 0,
+        idUser: widget.idUser,
+      ),
       appBar: AppBar(
         elevation: 1,
         backgroundColor: Colors.white,
@@ -28,7 +33,9 @@ class _InfoPageState extends State<InfoPage> {
         ),
         centerTitle: true,
       ),
-      drawer: const MyCustomDrawer(),
+      drawer: MyCustomDrawer(
+        idUser: widget.idUser,
+      ),
       body: const AnimatedListView(
           duration: 100,
           extendedSpaceBetween: 30,

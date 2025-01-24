@@ -6,7 +6,9 @@ import 'package:flutter_klinik/main_page.dart';
 import 'package:flutter_klinik/tentang_aplikasi.dart';
 
 class MyCustomDrawer extends StatelessWidget {
-  const MyCustomDrawer({super.key});
+  final int idUser;
+
+  const MyCustomDrawer({super.key, required this.idUser});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,9 @@ class MyCustomDrawer extends StatelessWidget {
               title: const Text("Beranda"),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const MainPage();
+                  return MainPage(
+                    idUser: idUser,
+                  );
                 }));
               },
             ),
@@ -36,7 +40,9 @@ class MyCustomDrawer extends StatelessWidget {
               title: const Text("Kritik dan Saran"),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const Kritik();
+                  return Kritik(
+                    idUser: idUser,
+                  );
                 }));
               },
             ),
@@ -46,7 +52,9 @@ class MyCustomDrawer extends StatelessWidget {
               title: const Text("Tentang Aplikasi"),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const TentangAplikasi();
+                  return TentangAplikasi(
+                    idUser: idUser,
+                  );
                 }));
               },
             ),
@@ -80,9 +88,6 @@ class MyCustomDrawer extends StatelessWidget {
                         ],
                       );
                     });
-                // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                //   return const Login();
-                // }));
               },
             ),
           ],

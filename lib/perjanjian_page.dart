@@ -5,9 +5,11 @@ import 'package:intl/intl.dart';
 import 'perjanjian_model.dart';
 
 class PerjanjianPage extends StatefulWidget {
+  final int idUser;
   final List<PerjanjianModel> perjanjianList;
 
-  const PerjanjianPage({super.key, required this.perjanjianList});
+  const PerjanjianPage(
+      {super.key, required this.perjanjianList, required this.idUser});
 
   @override
   State<PerjanjianPage> createState() => _PerjanjianPageState();
@@ -17,7 +19,10 @@ class _PerjanjianPageState extends State<PerjanjianPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 0),
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: 0,
+        idUser: widget.idUser,
+      ),
       appBar: AppBar(
         title: const Text(
           "Data Kunjungan Pasien",
@@ -29,7 +34,9 @@ class _PerjanjianPageState extends State<PerjanjianPage> {
         ),
         centerTitle: true,
       ),
-      drawer: const MyCustomDrawer(),
+      drawer: MyCustomDrawer(
+        idUser: widget.idUser,
+      ),
       body: ListView.builder(
         itemCount: widget.perjanjianList.length,
         itemBuilder: (context, index) {

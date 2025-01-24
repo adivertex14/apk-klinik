@@ -4,21 +4,18 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_klinik/widgets/mydrawer.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
+//   final int idUser;
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: DokterPage(),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return const MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: DokterPage(),
+//     );
+//   }
+// }
 
 class Dokter {
   final int id;
@@ -44,7 +41,8 @@ class Dokter {
 }
 
 class DokterPage extends StatefulWidget {
-  const DokterPage({super.key});
+  final int idUser;
+  const DokterPage({super.key, required this.idUser});
 
   @override
   State<DokterPage> createState() => _DokterPageState();
@@ -74,7 +72,10 @@ class _DokterPageState extends State<DokterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 0),
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: 0,
+        idUser: widget.idUser,
+      ),
       appBar: AppBar(
         elevation: 1,
         backgroundColor: Colors.blue,
@@ -88,7 +89,9 @@ class _DokterPageState extends State<DokterPage> {
         ),
         centerTitle: true,
       ),
-      drawer: const MyCustomDrawer(),
+      drawer: MyCustomDrawer(
+        idUser: widget.idUser,
+      ),
       body: FutureBuilder<List<Dokter>>(
         future: dokterList,
         builder: (context, snapshot) {

@@ -3,6 +3,7 @@ import 'package:flutter_klinik/pasien/pasien.dart';
 import 'package:flutter_klinik/widgets/bottomnavbar.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
 enum JenisKelamin {
   lakiLaki,
@@ -10,7 +11,8 @@ enum JenisKelamin {
 }
 
 class TambahPasien extends StatefulWidget {
-  const TambahPasien({super.key});
+  final int idUser;
+  const TambahPasien({super.key, required this.idUser});
 
   @override
   State<TambahPasien> createState() => _TambahPasienState();
@@ -23,6 +25,7 @@ class _TambahPasienState extends State<TambahPasien> {
   final _namaController = TextEditingController();
   final _tanggalController = TextEditingController();
   final _hpController = TextEditingController();
+  final logger = Logger();
   Future<bool> _simpan() async {
     try {
       final respon = await http.post(
@@ -39,7 +42,7 @@ class _TambahPasienState extends State<TambahPasien> {
         },
       );
       if (respon.statusCode == 200) {
-        print({
+        logger.i({
           "nama_pasien": _namaController.text,
           "jenis_kelamin": _jenisKelamin == JenisKelamin.lakiLaki
               ? "laki-laki"
@@ -55,7 +58,7 @@ class _TambahPasienState extends State<TambahPasien> {
       }
     } catch (error) {
       // Handle network or server errors here
-      print(error);
+      logger.i(error);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Terjadi kesalahan saat menyimpan data"),
@@ -83,7 +86,10 @@ class _TambahPasienState extends State<TambahPasien> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 0),
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: 0,
+        idUser: widget.idUser,
+      ),
       appBar: AppBar(
         title: const Text("Tambah Data Pasien"),
       ),
@@ -120,7 +126,7 @@ class _TambahPasienState extends State<TambahPasien> {
                 ),
                 value: _jenisKelamin,
                 onChanged: (JenisKelamin? newValue) {
-                  print(_jenisKelamin);
+                  logger.i(_jenisKelamin);
                   setState(() {
                     _jenisKelamin = newValue;
                   });
@@ -207,7 +213,10 @@ class _TambahPasienState extends State<TambahPasien> {
                       });
                       Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(builder: (context) => const Pasien()),
+                        MaterialPageRoute(
+                            builder: (context) => Pasien(
+                                  idUser: widget.idUser,
+                                )),
                         (Route<dynamic> route) => false,
                       );
                     }

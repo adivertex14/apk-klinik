@@ -3,7 +3,8 @@ import 'package:flutter_klinik/widgets/bottomnavbar.dart';
 import 'package:flutter_klinik/widgets/mydrawer.dart';
 
 class Pencarian extends StatefulWidget {
-  const Pencarian({super.key});
+  final int idUser;
+  const Pencarian({super.key, required this.idUser});
 
   @override
   State<Pencarian> createState() => _PendaftaranState();
@@ -13,7 +14,10 @@ class _PendaftaranState extends State<Pencarian> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 1),
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: 1,
+        idUser: widget.idUser,
+      ),
       appBar: AppBar(
         elevation: 1,
         backgroundColor: Colors.white,
@@ -27,7 +31,9 @@ class _PendaftaranState extends State<Pencarian> {
         ),
         centerTitle: true,
       ),
-      drawer: const MyCustomDrawer(),
+      drawer: MyCustomDrawer(
+        idUser: widget.idUser,
+      ),
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Column(

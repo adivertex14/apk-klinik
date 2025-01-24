@@ -8,8 +8,10 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 
 class BottomNavBar extends StatefulWidget {
   final int selectedIndex;
+  final int idUser;
 
-  const BottomNavBar({super.key, required this.selectedIndex});
+  const BottomNavBar(
+      {super.key, required this.selectedIndex, required this.idUser});
 
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();
@@ -22,28 +24,38 @@ class _BottomNavBarState extends State<BottomNavBar> {
         Fluttertoast.showToast(msg: "Anda Kembali ke Halaman Utama");
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const MainPage()),
+          MaterialPageRoute(
+              builder: (context) => MainPage(idUser: widget.idUser)),
         );
         break;
       case 1:
         Fluttertoast.showToast(msg: "Anda Beralih ke Halaman Pencarian");
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Pencarian()),
+          MaterialPageRoute(
+              builder: (context) => Pencarian(
+                    idUser: widget.idUser,
+                  )),
         );
         break;
       case 2:
         Fluttertoast.showToast(msg: "Anda Beralih ke Halaman Daftar Pasien");
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Pasien()),
+          MaterialPageRoute(
+              builder: (context) => Pasien(
+                    idUser: widget.idUser,
+                  )),
         );
         break;
       case 3:
         Fluttertoast.showToast(msg: "Anda Beralih ke Halaman Profil");
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Profil()),
+          MaterialPageRoute(
+              builder: (context) => Profil(
+                    idUser: widget.idUser,
+                  )),
         );
         break;
     }

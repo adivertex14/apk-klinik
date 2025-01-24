@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_klinik/dokter_page.dart';
-import 'package:flutter_klinik/form_daftar.dart';
+// import 'package:flutter_klinik/form_daftar.dart';
 import 'package:flutter_klinik/info_page.dart';
 import 'package:flutter_klinik/widgets/bottomnavbar.dart';
 
@@ -11,9 +13,11 @@ import 'package:flutter_klinik/perjanjian_page.dart';
 import 'package:flutter_klinik/tentang_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:http/http.dart' as http;
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  final int idUser;
+  const MainPage({super.key, required this.idUser});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -27,10 +31,45 @@ class _MainPageState extends State<MainPage> {
     'Assets/image/ban_dalam.jpg',
   ];
 
+  String namaLengkap = "";
+  String fotoUrl = "";
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://192.168.75.7/api_klinik/read_user.php'),
+        body: {
+          'id': widget.idUser.toString(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          namaLengkap = data['nama_lengkap'] ?? "Pengguna";
+          fotoUrl = data['foto'] ?? "";
+        });
+      } else {
+        print("Gagal mendapatkan data pengguna: ${response.body}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 0),
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: 0,
+        idUser: widget.idUser,
+      ),
       appBar: AppBar(
         title: const Text(
           "Beranda",
@@ -42,7 +81,7 @@ class _MainPageState extends State<MainPage> {
         ),
         centerTitle: true,
       ),
-      drawer: const MyCustomDrawer(),
+      drawer: MyCustomDrawer(idUser: widget.idUser),
       backgroundColor: const Color.fromARGB(255, 158, 221, 250),
       body: SafeArea(
         child: Padding(
@@ -51,22 +90,22 @@ class _MainPageState extends State<MainPage> {
             children: [
               // const SizedBox(height: 22),
               // Row dengan teks dan avatar
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Hallo,',
                         style: TextStyle(
-                          color: Colors.black45,
+                          color: Colors.black87,
                           fontSize: 16,
                         ),
                       ),
                       Text(
-                        "Adi Supriatna",
-                        style: TextStyle(
+                        namaLengkap,
+                        style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
@@ -76,11 +115,16 @@ class _MainPageState extends State<MainPage> {
                   CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.grey,
-                    child: CircleAvatar(
-                      radius: 26,
-                      backgroundImage: AssetImage("Assets/image/adi_pp.jpg"),
-                    ),
-                  )
+                    child: fotoUrl.isNotEmpty
+                        ? CircleAvatar(
+                            radius: 26,
+                            backgroundImage: NetworkImage(fotoUrl),
+                          )
+                        : const CircleAvatar(
+                            radius: 26,
+                            backgroundImage: AssetImage("Assets/image/pp.png"),
+                          ),
+                  ),
                 ],
               ),
 
@@ -114,48 +158,50 @@ class _MainPageState extends State<MainPage> {
                   mainAxisSpacing: 2,
                   crossAxisSpacing: 2,
                   children: [
-                    InkWell(
-                      onTap: () {
-                        Fluttertoast.showToast(
-                            msg: "Anda Memilih Menu Pendaftaran");
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return const FormDaftar(
-                            perjanjianList: [],
-                          );
-                        }));
-                      },
-                      child: Card(
-                        elevation: 2,
-                        shadowColor: Colors.green,
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Column(
-                          children: [
-                            const Padding(padding: EdgeInsets.all(10)),
-                            Image.asset(
-                              'Assets/image/register.png',
-                              width: 100,
-                              fit: BoxFit.cover,
-                            ),
-                            const SizedBox(height: 10),
-                            const Text(
-                              "Pendaftaran",
-                              style:
-                                  TextStyle(fontSize: 24, color: Colors.blue),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     Fluttertoast.showToast(
+                    //         msg: "Anda Memilih Menu Pendaftaran");
+                    //     Navigator.push(context,
+                    //         MaterialPageRoute(builder: (context) {
+                    //       return const FormDaftar(
+                    //         perjanjianList: [],
+                    //       );
+                    //     }));
+                    //   },
+                    //   child: Card(
+                    //     elevation: 2,
+                    //     shadowColor: Colors.green,
+                    //     color: Colors.white,
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(20),
+                    //     ),
+                    //     child: Column(
+                    //       children: [
+                    //         const Padding(padding: EdgeInsets.all(10)),
+                    //         Image.asset(
+                    //           'Assets/image/register.png',
+                    //           width: 100,
+                    //           fit: BoxFit.cover,
+                    //         ),
+                    //         const SizedBox(height: 10),
+                    //         const Text(
+                    //           "Pendaftaran",
+                    //           style:
+                    //               TextStyle(fontSize: 24, color: Colors.blue),
+                    //         )
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                     InkWell(
                       onTap: () {
                         Fluttertoast.showToast(msg: "Anda Memilih Menu Dokter");
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return const DokterPage();
+                          return DokterPage(
+                            idUser: widget.idUser,
+                          );
                         }));
                       },
                       child: Card(
@@ -188,7 +234,9 @@ class _MainPageState extends State<MainPage> {
                         Fluttertoast.showToast(msg: "Anda Memilih Menu Pasien");
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return const Pasien();
+                          return Pasien(
+                            idUser: widget.idUser,
+                          );
                         }));
                       },
                       child: Card(
@@ -222,8 +270,9 @@ class _MainPageState extends State<MainPage> {
                             msg: "Anda Memilih Menu Data Kunjungan Pasien");
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return const PerjanjianPage(
-                            perjanjianList: [],
+                          return PerjanjianPage(
+                            idUser: widget.idUser,
+                            perjanjianList: const [],
                           );
                         }));
                       },
@@ -258,7 +307,7 @@ class _MainPageState extends State<MainPage> {
                             msg: "Anda Memilih Menu Info Terbaru");
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return const InfoPage();
+                          return InfoPage(idUser: widget.idUser);
                         }));
                       },
                       child: Card(
@@ -292,7 +341,9 @@ class _MainPageState extends State<MainPage> {
                             msg: "Anda Memilih Menu Tentang Klinik");
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return const TentangPage();
+                          return TentangPage(
+                            idUser: widget.idUser,
+                          );
                         }));
                       },
                       child: Card(
@@ -330,10 +381,3 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
-
-
-
-// onTap: () => Navigator.of(context)
-//                           .push(MaterialPageRoute(builder: (context) {
-//                         return const Pendaftaran();
-//                       })),

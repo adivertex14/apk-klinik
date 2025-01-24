@@ -7,15 +7,18 @@ import 'package:flutter_klinik/pasien/tambah_pasien.dart';
 import 'package:flutter_klinik/widgets/bottomnavbar.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
 class Pasien extends StatefulWidget {
-  const Pasien({super.key});
+  final int idUser;
+  const Pasien({super.key, required this.idUser});
 
   @override
   State<Pasien> createState() => _PasienState();
 }
 
 class _PasienState extends State<Pasien> {
+  final logger = Logger();
   String formatTanggal(String tanggal) {
     try {
       DateTime parsedDate = DateTime.parse(tanggal); // Parsing tanggal
@@ -42,7 +45,7 @@ class _PasienState extends State<Pasien> {
         });
       }
     } catch (e) {
-      print(e);
+      logger.i(e);
     }
   }
 
@@ -59,7 +62,7 @@ class _PasienState extends State<Pasien> {
       }
       return false;
     } catch (e) {
-      print(e);
+      logger.i(e);
     }
   }
 
@@ -74,7 +77,8 @@ class _PasienState extends State<Pasien> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 2),
+      bottomNavigationBar:
+          BottomNavBar(selectedIndex: 2, idUser: widget.idUser),
       appBar: AppBar(
         title: const Text(
           "Daftar Pasien Terdaftar",
@@ -128,6 +132,7 @@ class _PasienState extends State<Pasien> {
                                       context,
                                       MaterialPageRoute(
                                         builder: ((context) => EditPasien(
+                                              idUser: widget.idUser,
                                               listData: {
                                                 "id": _listdata[index]['id'],
                                                 "nama_pasien": _listdata[index]
@@ -188,7 +193,10 @@ class _PasienState extends State<Pasien> {
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            const Pasien()),
+                                                            Pasien(
+                                                              idUser:
+                                                                  widget.idUser,
+                                                            )),
                                                     (Route<dynamic> route) =>
                                                         false,
                                                   );
@@ -265,7 +273,9 @@ class _PasienState extends State<Pasien> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: ((context) => const TambahPasien())));
+                    builder: ((context) => TambahPasien(
+                          idUser: widget.idUser,
+                        ))));
           },
           child: const Text(
             "Tambah Pasien",

@@ -3,7 +3,8 @@ import 'package:flutter_klinik/widgets/bottomnavbar.dart';
 import 'package:flutter_klinik/widgets/mydrawer.dart';
 
 class TentangAplikasi extends StatefulWidget {
-  const TentangAplikasi({super.key});
+  final int idUser;
+  const TentangAplikasi({super.key, required this.idUser});
 
   @override
   State<TentangAplikasi> createState() => _SettingState();
@@ -13,7 +14,10 @@ class _SettingState extends State<TentangAplikasi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 2),
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: 2,
+        idUser: widget.idUser,
+      ),
       appBar: AppBar(
         elevation: 1,
         backgroundColor: Colors.white,
@@ -27,7 +31,9 @@ class _SettingState extends State<TentangAplikasi> {
         ),
         centerTitle: true,
       ),
-      drawer: const MyCustomDrawer(),
+      drawer: MyCustomDrawer(
+        idUser: widget.idUser,
+      ),
       body: Center(
           child: Column(
         children: [

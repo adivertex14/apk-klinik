@@ -4,7 +4,8 @@ import 'package:flutter_klinik/widgets/mydrawer.dart';
 // import 'package:flutter_klinik/profil.dart';
 
 class Profil extends StatefulWidget {
-  const Profil({super.key});
+  final int idUser;
+  const Profil({super.key, required this.idUser});
 
   @override
   State<Profil> createState() => _SettingState();
@@ -14,7 +15,10 @@ class _SettingState extends State<Profil> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 3),
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: 3,
+        idUser: widget.idUser,
+      ),
       appBar: AppBar(
         elevation: 1,
         backgroundColor: Colors.white,
@@ -28,7 +32,9 @@ class _SettingState extends State<Profil> {
         ),
         centerTitle: true,
       ),
-      drawer: const MyCustomDrawer(),
+      drawer: MyCustomDrawer(
+        idUser: widget.idUser,
+      ),
       body: Column(
         children: [
           Container(

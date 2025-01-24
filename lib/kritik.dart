@@ -3,7 +3,8 @@ import 'package:flutter_klinik/widgets/bottomnavbar.dart';
 import 'package:flutter_klinik/widgets/mydrawer.dart';
 
 class Kritik extends StatefulWidget {
-  const Kritik({super.key});
+  final int idUser;
+  const Kritik({super.key, required this.idUser});
 
   @override
   State<Kritik> createState() => _PendaftaranState();
@@ -13,7 +14,10 @@ class _PendaftaranState extends State<Kritik> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 0),
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: 0,
+        idUser: widget.idUser,
+      ),
       appBar: AppBar(
         centerTitle: true,
         elevation: 1,
@@ -27,7 +31,9 @@ class _PendaftaranState extends State<Kritik> {
           ),
         ),
       ),
-      drawer: const MyCustomDrawer(),
+      drawer: MyCustomDrawer(
+        idUser: widget.idUser,
+      ),
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Column(

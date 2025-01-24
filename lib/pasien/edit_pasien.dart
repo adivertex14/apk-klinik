@@ -3,12 +3,14 @@ import 'package:flutter_klinik/pasien/pasien.dart';
 import 'package:flutter_klinik/widgets/bottomNavBar.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
 enum JenisKelamin { lakiLaki, perempuan }
 
 class EditPasien extends StatefulWidget {
+  final int idUser;
   final Map listData;
-  const EditPasien({super.key, required this.listData});
+  const EditPasien({super.key, required this.listData, required this.idUser});
 
   @override
   State<EditPasien> createState() => _EditPasienState();
@@ -22,6 +24,7 @@ class _EditPasienState extends State<EditPasien> {
   final _namaController = TextEditingController();
   final _tanggalController = TextEditingController();
   final _hpController = TextEditingController();
+  final logger = Logger();
 
   @override
   void initState() {
@@ -35,8 +38,8 @@ class _EditPasienState extends State<EditPasien> {
     _hpController.text = widget.listData['no_hp'];
 
     // Debugging
-    print("Jenis Kelamin: $_jenisKelamin");
-    print("Tanggal Lahir: ${_tanggalController.text}");
+    logger.i("Jenis Kelamin: $_jenisKelamin");
+    logger.i("Tanggal Lahir: ${_tanggalController.text}");
   }
 
   Future<bool> _ubah() async {
@@ -50,7 +53,7 @@ class _EditPasienState extends State<EditPasien> {
         "no_hp": _hpController.text,
       };
 
-      print("Data dikirim ke API: $dataToSend"); // Debugging
+      logger.i("Data dikirim ke API: $dataToSend"); // Debugging
 
       final respon = await http.post(
         // Uri.parse('http://192.168.1.4/api_klinik/edit_pasien.php'),
@@ -59,17 +62,21 @@ class _EditPasienState extends State<EditPasien> {
         body: dataToSend,
       );
       if (respon.statusCode == 200) {
-        print("Response dari API: ${respon.body}"); // Debugging
+        logger.i("Response dari API: ${respon.body}"); // Debugging
         return true;
       } else {
         throw Exception(
             'Failed to save data. Status code: ${respon.statusCode}');
       }
     } catch (error) {
-      print(error);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Terjadi kesalahan saat menyimpan data")),
-      );
+      logger.i(error);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text("Terjadi kesalahan saat menyimpan data")),
+        );
+      }
+
       return false;
     }
   }
@@ -92,7 +99,10 @@ class _EditPasienState extends State<EditPasien> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const BottomNavBar(selectedIndex: 0),
+      bottomNavigationBar: BottomNavBar(
+        selectedIndex: 0,
+        idUser: widget.idUser,
+      ),
       appBar: AppBar(
         title: const Text("Ubah Data Pasien"),
       ),
@@ -192,7 +202,10 @@ class _EditPasienState extends State<EditPasien> {
                           const snackbar = SnackBar(
                             content: Text("Data berhasil diubah"),
                           );
-                          ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                          if (mounted) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackbar);
+                          }
                         } else {
                           const snackbar = SnackBar(
                             content: Text("Data gagal diubah"),
@@ -202,7 +215,10 @@ class _EditPasienState extends State<EditPasien> {
                       });
                       Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(builder: (context) => const Pasien()),
+                        MaterialPageRoute(
+                            builder: (context) => Pasien(
+                                  idUser: widget.idUser,
+                                )),
                         (Route<dynamic> route) => false,
                       );
                     }
