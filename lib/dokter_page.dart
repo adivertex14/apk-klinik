@@ -82,7 +82,7 @@ class _DokterPageState extends State<DokterPage> {
         title: const Text(
           "Daftar Nama Dokter",
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_klinik/pasien/pasien.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_klinik/main_page.dart';
-import 'package:flutter_klinik/pencarian.dart';
+// import 'package:flutter_klinik/pencarian.dart';
 import 'package:flutter_klinik/profil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -21,24 +21,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
   void _onTabChange(int index) {
     switch (index) {
       case 0:
-        Fluttertoast.showToast(msg: "Anda Kembali ke Halaman Utama");
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MainPage(idUser: widget.idUser)),
-        );
-        break;
-      case 1:
-        Fluttertoast.showToast(msg: "Anda Beralih ke Halaman Pencarian");
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Pencarian(
-                    idUser: widget.idUser,
-                  )),
-        );
-        break;
-      case 2:
         Fluttertoast.showToast(msg: "Anda Beralih ke Halaman Daftar Pasien");
         Navigator.pushReplacement(
           context,
@@ -48,7 +30,17 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   )),
         );
         break;
-      case 3:
+
+      case 1:
+        Fluttertoast.showToast(msg: "Anda Kembali ke Halaman Utama");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MainPage(idUser: widget.idUser)),
+        );
+
+        break;
+      case 2:
         Fluttertoast.showToast(msg: "Anda Beralih ke Halaman Profil");
         Navigator.pushReplacement(
           context,
@@ -88,16 +80,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 Colors.lightBlueAccent, // Latar belakang lebih terang
             tabs: const [
               GButton(
-                  icon: Icons.home,
-                  text: 'Beranda',
-                  textStyle: TextStyle(fontSize: 14)),
-              GButton(
-                  icon: Icons.search,
-                  text: 'Pencarian',
-                  textStyle: TextStyle(fontSize: 14)),
-              GButton(
                   icon: Icons.person_add_alt_rounded,
                   text: 'Pasien',
+                  textStyle: TextStyle(fontSize: 14)),
+              GButton(
+                  icon: Icons.home,
+                  text: 'Beranda',
                   textStyle: TextStyle(fontSize: 14)),
               GButton(
                   icon: Icons.account_circle,

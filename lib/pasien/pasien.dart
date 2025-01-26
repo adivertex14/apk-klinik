@@ -35,7 +35,8 @@ class _PasienState extends State<Pasien> {
     try {
       final respon = await http
           // .get(Uri.parse('http://192.168.1.4/api_klinik/read_pasien.php'));
-          .get(Uri.parse('http://192.168.75.7/api_klinik/read_pasien.php'));
+          .get(Uri.parse(
+              'http://192.168.75.7/api_klinik/read_pasien.php?id_user=${widget.idUser}'));
       if (respon.statusCode == 200) {
         // print(respon.body);
         final data = jsonDecode(respon.body);
@@ -78,7 +79,7 @@ class _PasienState extends State<Pasien> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar:
-          BottomNavBar(selectedIndex: 2, idUser: widget.idUser),
+          BottomNavBar(selectedIndex: 0, idUser: widget.idUser),
       appBar: AppBar(
         title: const Text(
           "Daftar Pasien Terdaftar",

@@ -20,11 +20,11 @@ class _TentangPageState extends State<TentangPage> {
         ),
         appBar: AppBar(
           elevation: 1,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.blue,
           title: const Text(
             "Tentang Klinik",
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),

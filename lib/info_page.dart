@@ -22,11 +22,11 @@ class _InfoPageState extends State<InfoPage> {
       ),
       appBar: AppBar(
         elevation: 1,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.blue,
         title: const Text(
-          "Informasi Terbaru",
+          "Info Terbaru",
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),

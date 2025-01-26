@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_klinik/dokter_page.dart';
 // import 'package:flutter_klinik/form_daftar.dart';
 import 'package:flutter_klinik/info_page.dart';
+import 'package:flutter_klinik/pendaftaran.dart';
 import 'package:flutter_klinik/widgets/bottomnavbar.dart';
 
 import 'package:flutter_klinik/widgets/mydrawer.dart';
 import 'package:flutter_klinik/pasien/pasien.dart';
 
-import 'package:flutter_klinik/perjanjian_page.dart';
+import 'package:flutter_klinik/data_kunjungan.dart';
 import 'package:flutter_klinik/tentang_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -67,19 +68,16 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavBar(
-        selectedIndex: 0,
+        selectedIndex: 1,
         idUser: widget.idUser,
       ),
       appBar: AppBar(
         title: const Text(
           "Beranda",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
+        backgroundColor: Colors.blueAccent,
       ),
       drawer: MyCustomDrawer(idUser: widget.idUser),
       backgroundColor: const Color.fromARGB(255, 158, 221, 250),
@@ -114,7 +112,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   CircleAvatar(
                     radius: 30,
-                    backgroundColor: Colors.grey,
+                    backgroundColor: Colors.amber,
                     child: fotoUrl.isNotEmpty
                         ? CircleAvatar(
                             radius: 26,
@@ -158,42 +156,42 @@ class _MainPageState extends State<MainPage> {
                   mainAxisSpacing: 2,
                   crossAxisSpacing: 2,
                   children: [
-                    // InkWell(
-                    //   onTap: () {
-                    //     Fluttertoast.showToast(
-                    //         msg: "Anda Memilih Menu Pendaftaran");
-                    //     Navigator.push(context,
-                    //         MaterialPageRoute(builder: (context) {
-                    //       return const FormDaftar(
-                    //         perjanjianList: [],
-                    //       );
-                    //     }));
-                    //   },
-                    //   child: Card(
-                    //     elevation: 2,
-                    //     shadowColor: Colors.green,
-                    //     color: Colors.white,
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(20),
-                    //     ),
-                    //     child: Column(
-                    //       children: [
-                    //         const Padding(padding: EdgeInsets.all(10)),
-                    //         Image.asset(
-                    //           'Assets/image/register.png',
-                    //           width: 100,
-                    //           fit: BoxFit.cover,
-                    //         ),
-                    //         const SizedBox(height: 10),
-                    //         const Text(
-                    //           "Pendaftaran",
-                    //           style:
-                    //               TextStyle(fontSize: 24, color: Colors.blue),
-                    //         )
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
+                    InkWell(
+                      onTap: () {
+                        Fluttertoast.showToast(
+                            msg: "Anda Memilih Menu Pendaftaran");
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return Pendaftaran(
+                            idUser: widget.idUser,
+                          );
+                        }));
+                      },
+                      child: Card(
+                        elevation: 2,
+                        shadowColor: Colors.green,
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Column(
+                          children: [
+                            const Padding(padding: EdgeInsets.all(10)),
+                            Image.asset(
+                              'Assets/image/register.png',
+                              width: 100,
+                              fit: BoxFit.cover,
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              "Pendaftaran",
+                              style:
+                                  TextStyle(fontSize: 24, color: Colors.blue),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
                     InkWell(
                       onTap: () {
                         Fluttertoast.showToast(msg: "Anda Memilih Menu Dokter");
@@ -270,7 +268,7 @@ class _MainPageState extends State<MainPage> {
                             msg: "Anda Memilih Menu Data Kunjungan Pasien");
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return PerjanjianPage(
+                          return DataKunjungan(
                             idUser: widget.idUser,
                             perjanjianList: const [],
                           );

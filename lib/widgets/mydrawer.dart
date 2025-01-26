@@ -22,7 +22,9 @@ class MyCustomDrawer extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const MyHeaderDrawer(),
+            MyHeaderDrawer(
+              idUser: idUser,
+            ),
             ListTile(
               leading: const Icon(Icons.home),
               title: const Text("Beranda"),

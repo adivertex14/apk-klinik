@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import 'package:flutter_klinik/contoh.dart';
 import 'package:flutter_klinik/splash.dart';
 
 void main() {

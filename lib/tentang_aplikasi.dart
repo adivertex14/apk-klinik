@@ -20,11 +20,11 @@ class _SettingState extends State<TentangAplikasi> {
       ),
       appBar: AppBar(
         elevation: 1,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.blue,
         title: const Text(
           "Tentang Aplikasi",
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -82,7 +82,7 @@ class _SettingState extends State<TentangAplikasi> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             alignment: Alignment.centerLeft,
             child: const Text(
-              "Adi Supriatna",
+              "Adi Supriatna (22552011132)\nGaluh Dwi Candra (22552012010)\nSopandi",
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.black,
@@ -91,30 +91,31 @@ class _SettingState extends State<TentangAplikasi> {
             ),
           ),
           const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              "NIM :",
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.blue,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              "22552011132",
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.black,
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
+          // Container(
+          //   padding: const EdgeInsets.symmetric(horizontal: 20),
+          //   alignment: Alignment.centerLeft,
+          //   child: const Text(
+          //     "NIM :",
+          //     style: TextStyle(
+          //       fontSize: 16,
+          //       color: Colors.blue,
+          //     ),
+          //     textAlign: TextAlign.left,
+          //   ),
+          // ),
+          // Container(
+          //   padding: const EdgeInsets.symmetric(horizontal: 20),
+          //   alignment: Alignment.centerLeft,
+          //   child: const Text(
+          //     "22552011132",
+          //     style: TextStyle(
+          //       fontSize: 20,
+          //       color: Colors.black,
+          //     ),
+          //     textAlign: TextAlign.left,
+          //   ),
+          // ),
+          Divider(),
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -141,6 +142,7 @@ class _SettingState extends State<TentangAplikasi> {
             ),
           ),
           const SizedBox(height: 10),
+          Divider(),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             alignment: Alignment.centerLeft,
@@ -157,7 +159,7 @@ class _SettingState extends State<TentangAplikasi> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             alignment: Alignment.centerLeft,
             child: const Text(
-              "UTS Pemrograman Mobile 2",
+              "UAS Pemrograman Mobile 2",
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.black,

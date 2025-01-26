@@ -39,6 +39,7 @@ class _TambahPasienState extends State<TambahPasien> {
           // Update if using gender
           "tgl_lahir": _tanggalController.text,
           "no_hp": _hpController.text,
+          "id_user": widget.idUser.toString(),
         },
       );
       if (respon.statusCode == 200) {
@@ -91,7 +92,17 @@ class _TambahPasienState extends State<TambahPasien> {
         idUser: widget.idUser,
       ),
       appBar: AppBar(
-        title: const Text("Tambah Data Pasien"),
+        elevation: 1,
+        backgroundColor: Colors.blue,
+        title: const Text(
+          "Input Data Pasien",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: Form(
         key: formKey,

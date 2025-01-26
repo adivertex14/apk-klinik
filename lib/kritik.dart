@@ -19,17 +19,17 @@ class _PendaftaranState extends State<Kritik> {
         idUser: widget.idUser,
       ),
       appBar: AppBar(
-        centerTitle: true,
         elevation: 1,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.blue,
         title: const Text(
           "Kritik dan Saran",
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
+        centerTitle: true,
       ),
       drawer: MyCustomDrawer(
         idUser: widget.idUser,

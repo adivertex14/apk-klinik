@@ -29,7 +29,7 @@ class _EditPasienState extends State<EditPasien> {
   @override
   void initState() {
     super.initState();
-    _idController.text = widget.listData['id'];
+    _idController.text = widget.listData['id'] ?? '';
     _namaController.text = widget.listData['nama_pasien'];
     _jenisKelamin = widget.listData['jenis_kelamin'] == 'laki-laki'
         ? JenisKelamin.lakiLaki
@@ -104,7 +104,17 @@ class _EditPasienState extends State<EditPasien> {
         idUser: widget.idUser,
       ),
       appBar: AppBar(
-        title: const Text("Ubah Data Pasien"),
+        elevation: 1,
+        backgroundColor: Colors.blue,
+        title: const Text(
+          "Ubah Data Pasien",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: Form(
         key: formKey,

@@ -90,58 +90,6 @@ class _DaftarAkunState extends State<DaftarAkun> {
     }
   }
 
-  // Future<bool> _simpan() async {
-  //   try {
-  //     final respon = await http.post(
-  //       // Uri.parse('http://192.168.1.4/api_klinik/create_pasien.php'),
-  //       Uri.parse('http://192.168.75.7/api_klinik/register_user.php'),
-
-  //       body: {
-  //         "username": _userController.text,
-  //         "password": _passwordController.text,
-  //         "nama_lengkap": _namaController.text,
-  //         "email": _emailController.text,
-  //         "jenis_kelamin": _jenisKelamin == JenisKelamin.lakiLaki
-  //             ? "laki-laki"
-  //             : "perempuan",
-  //         "alamat": _alamatController.text,
-  //         "no_hp": _hpController.text,
-  //       },
-  //     );
-
-  //     if (respon.statusCode == 200) {
-  //       print({
-  //         "username": _userController.text,
-  //         "password": _passwordController.text,
-  //         "nama_lengkap": _namaController.text,
-  //         "email": _emailController.text,
-  //         "jenis_kelamin": _jenisKelamin == JenisKelamin.lakiLaki
-  //             ? "laki-laki"
-  //             : "perempuan",
-  //         "alamat": _alamatController.text,
-  //         "no_hp": _hpController.text,
-  //       });
-
-  //       return true;
-  //     } else {
-  //       throw Exception(
-  //           'Failed to save data. Status code: ${respon.statusCode}');
-  //     }
-  //   } catch (error) {
-  //   // Handle network or server errors here
-
-  //     print(error);
-
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(
-  //         content: Text("Terjadi kesalahan saat menyimpan data"),
-  //       ),
-  //     );
-
-  //     return false;
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     var placeholder = SizedBox(
@@ -418,7 +366,57 @@ class _DaftarAkunState extends State<DaftarAkun> {
 }
 
 
+  // Future<bool> _simpan() async {
+  //   try {
+  //     final respon = await http.post(
+  //       // Uri.parse('http://192.168.1.4/api_klinik/create_pasien.php'),
+  //       Uri.parse('http://192.168.75.7/api_klinik/register_user.php'),
 
+  //       body: {
+  //         "username": _userController.text,
+  //         "password": _passwordController.text,
+  //         "nama_lengkap": _namaController.text,
+  //         "email": _emailController.text,
+  //         "jenis_kelamin": _jenisKelamin == JenisKelamin.lakiLaki
+  //             ? "laki-laki"
+  //             : "perempuan",
+  //         "alamat": _alamatController.text,
+  //         "no_hp": _hpController.text,
+  //       },
+  //     );
+
+  //     if (respon.statusCode == 200) {
+  //       print({
+  //         "username": _userController.text,
+  //         "password": _passwordController.text,
+  //         "nama_lengkap": _namaController.text,
+  //         "email": _emailController.text,
+  //         "jenis_kelamin": _jenisKelamin == JenisKelamin.lakiLaki
+  //             ? "laki-laki"
+  //             : "perempuan",
+  //         "alamat": _alamatController.text,
+  //         "no_hp": _hpController.text,
+  //       });
+
+  //       return true;
+  //     } else {
+  //       throw Exception(
+  //           'Failed to save data. Status code: ${respon.statusCode}');
+  //     }
+  //   } catch (error) {
+  //   // Handle network or server errors here
+
+  //     print(error);
+
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text("Terjadi kesalahan saat menyimpan data"),
+  //       ),
+  //     );
+
+  //     return false;
+  //   }
+  // }
 
 
 
