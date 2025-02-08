@@ -24,7 +24,7 @@ class _MyHeaderDrawer extends State<MyHeaderDrawer> {
   Future<void> fetchUserData() async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.75.7/api_klinik/read_user.php'),
+        Uri.parse('http://192.168.1.6/api_klinik/read_user.php'),
         body: {
           'id': widget.idUser.toString(),
         },

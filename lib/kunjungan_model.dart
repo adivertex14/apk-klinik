@@ -15,7 +15,7 @@ class PerjanjianModel {
 
   factory PerjanjianModel.fromJson(Map<String, dynamic> json) {
     return PerjanjianModel(
-      id: json['id'] ?? '',
+      id: json['id'].toString(),
       namaPasien: json['nama_pasien'] ?? '',
       namaKlinik: json['nama_poliklinik'] ?? '',
       tanggalKunjungan: json['tgl_kunjungan'] ?? '',

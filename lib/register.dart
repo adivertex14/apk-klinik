@@ -57,7 +57,7 @@ class _DaftarAkunState extends State<DaftarAkun> {
     try {
       var stream = http.ByteStream(DelegatingStream.typed(image.openRead()));
       var length = await image.length();
-      var uri = Uri.parse('http://192.168.75.7/api_klinik/register_user.php');
+      var uri = Uri.parse('http://192.168.1.6/api_klinik/register_user.php');
 
       var request = http.MultipartRequest("POST", uri);
       var multipartFile = http.MultipartFile(
@@ -370,7 +370,7 @@ class _DaftarAkunState extends State<DaftarAkun> {
   //   try {
   //     final respon = await http.post(
   //       // Uri.parse('http://192.168.1.4/api_klinik/create_pasien.php'),
-  //       Uri.parse('http://192.168.75.7/api_klinik/register_user.php'),
+  //       Uri.parse('http://192.168.1.6/api_klinik/register_user.php'),
 
   //       body: {
   //         "username": _userController.text,
@@ -451,7 +451,7 @@ class _DaftarAkunState extends State<DaftarAkun> {
 //     try {
 //       final respon = await http.post(
 // // Uri.parse('http://192.168.1.4/api_klinik/create_pasien.php'),
-//         Uri.parse('http://192.168.75.7/api_klinik/register_user.php'),
+//         Uri.parse('http://192.168.1.6/api_klinik/register_user.php'),
 
 //         body: {
 //           "username": _userController.text,

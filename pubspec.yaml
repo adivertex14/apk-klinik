@@ -31,6 +31,7 @@ dependencies:
   async: ^2.11.0
   carousel_slider: ^5.0.0
   cupertino_icons: ^1.0.8
+  file_picker: ^8.3.2
   flineicons: ^0.1.1
   flutter:
     sdk: flutter
@@ -44,8 +45,12 @@ dependencies:
   logger: ^2.5.0
   motion_toast: ^2.11.0
   path: ^1.9.0
+  path_provider: ^2.1.5
+  pdf: ^3.11.2
   shaky_animated_listview: ^0.0.5
+  share_plus: ^10.1.4
   slide_rating_dialog: ^1.0.5
+  social_share: ^2.3.1
 
 dev_dependencies:
   flutter_lints: ^5.0.0

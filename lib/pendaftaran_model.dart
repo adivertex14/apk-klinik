@@ -20,7 +20,7 @@ class Klinik {
 
   factory Klinik.fromJson(Map<String, dynamic> json) {
     return Klinik(
-      id: json['id'],
+      id: json['id'].toString(),
       namaKlinik: json['nama_poliklinik'],
     );
   }

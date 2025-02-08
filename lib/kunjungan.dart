@@ -7,7 +7,7 @@ import 'package:flutter_klinik/widgets/mydrawer.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'perjanjian_model.dart';
+import 'kunjungan_model.dart';
 
 class DataKunjungan extends StatefulWidget {
   final int idUser;
@@ -41,14 +41,22 @@ class _DataKunjunganState extends State<DataKunjungan> {
   }
 
   Future<void> fetchPerjanjian() async {
-    final response = await http
-        .get(Uri.parse('http://192.168.75.7/api_klinik/get_kunjungan.php'));
+    final response = await http.get(Uri.parse(
+        'http://192.168.1.6/api_klinik/get_kunjungan.php?id_user=${widget.idUser}'));
+
+    print("Response JSON: ${response.body}"); // Debugging
 
     if (response.statusCode == 200) {
       setState(() {
-        final responseData = json.decode(response.body) as List;
-        perjanjianList =
-            responseData.map((data) => PerjanjianModel.fromJson(data)).toList();
+        final responseData = json.decode(response.body);
+        if (responseData is List) {
+          // Pastikan ini list
+          perjanjianList = responseData
+              .map((data) => PerjanjianModel.fromJson(data))
+              .toList();
+        } else {
+          print("Error: Data yang diterima bukan list");
+        }
       });
     } else {
       throw Exception('Failed to load data');
@@ -170,17 +178,6 @@ class _DataKunjunganState extends State<DataKunjungan> {
                     ],
                   ),
                 ),
-                // child: ListTile(
-                //   title: Text(perjanjian.namaPasien),
-                //   subtitle: Column(
-                //     crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: [
-                //       Text('Poliklinik: ${perjanjian.namaKlinik}'),
-                //       Text('Tanggal: ${perjanjian.tanggalKunjungan}'),
-                //       Text('Jadwal: ${perjanjian.jadwalPraktik}'),
-                //     ],
-                //   ),
-                // ),
               ),
             );
           },
@@ -189,103 +186,3 @@ class _DataKunjunganState extends State<DataKunjungan> {
     );
   }
 }
-
-
-
-
-
-// =========================================================================================
-// import 'package:flutter/material.dart';
-// import 'package:flutter_klinik/widgets/bottomnavbar.dart';
-// import 'package:flutter_klinik/widgets/mydrawer.dart';
-// // import 'package:intl/intl.dart';
-// import 'perjanjian_model.dart';
-
-// class PerjanjianPage extends StatefulWidget {
-//   final int idUser;
-//   final List<PerjanjianModel> perjanjianList;
-
-//   const PerjanjianPage(
-//       {super.key, required this.perjanjianList, required this.idUser});
-
-//   @override
-//   State<PerjanjianPage> createState() => _PerjanjianPageState();
-// }
-
-// class _PerjanjianPageState extends State<PerjanjianPage> {
-//   // List _listdata = [];
-//   // bool _isLoading = true;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       bottomNavigationBar: BottomNavBar(
-//         selectedIndex: 0,
-//         idUser: widget.idUser,
-//       ),
-//       appBar: AppBar(
-//         title: const Text(
-//           "Data Kunjungan Pasien",
-//           style: TextStyle(
-//             color: Colors.black,
-//             fontSize: 20,
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//         centerTitle: true,
-//       ),
-//       drawer: MyCustomDrawer(
-//         idUser: widget.idUser,
-//       ),
-//       body: ListView.builder(
-//           padding: EdgeInsets.all(10),
-//           itemBuilder: ((context, index) {
-//             return Padding(
-//               padding: EdgeInsets.all(8),
-//               child: Card(
-//                 child: Container(
-//                   padding: EdgeInsets.all(10),
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       const Text(
-//                         "Nama Pasien",
-//                         style: TextStyle(
-//                           fontSize: 18,
-//                           fontWeight: FontWeight.bold,
-//                           color: Colors.blueAccent,
-//                         ),
-//                       ),
-//                       const Text(
-//                         "Nama Poliklinik",
-//                         style: TextStyle(
-//                           fontSize: 18,
-//                           fontWeight: FontWeight.bold,
-//                           color: Colors.blueAccent,
-//                         ),
-//                       ),
-//                       const Text(
-//                         "Tanggal Kunjungan",
-//                         style: TextStyle(
-//                           fontSize: 18,
-//                           fontWeight: FontWeight.bold,
-//                           color: Colors.blueAccent,
-//                         ),
-//                       ),
-//                       const Text(
-//                         "Jadwal Praktik",
-//                         style: TextStyle(
-//                           fontSize: 18,
-//                           fontWeight: FontWeight.bold,
-//                           color: Colors.blueAccent,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             );
-//           })),
-//     );
-//   }
-// }

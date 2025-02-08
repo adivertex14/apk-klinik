@@ -10,7 +10,7 @@ import 'package:flutter_klinik/widgets/bottomnavbar.dart';
 import 'package:flutter_klinik/widgets/mydrawer.dart';
 import 'package:flutter_klinik/pasien/pasien.dart';
 
-import 'package:flutter_klinik/data_kunjungan.dart';
+import 'package:flutter_klinik/kunjungan.dart';
 import 'package:flutter_klinik/tentang_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -44,7 +44,7 @@ class _MainPageState extends State<MainPage> {
   Future<void> fetchUserData() async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.75.7/api_klinik/read_user.php'),
+        Uri.parse('http://192.168.1.6/api_klinik/read_user.php'),
         body: {
           'id': widget.idUser.toString(),
         },

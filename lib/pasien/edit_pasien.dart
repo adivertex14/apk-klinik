@@ -58,7 +58,7 @@ class _EditPasienState extends State<EditPasien> {
       final respon = await http.post(
         // Uri.parse('http://192.168.1.4/api_klinik/edit_pasien.php'),
         // Uri.parse('http://10.205.66.159/api_klinik/edit_pasien.php'),
-        Uri.parse('http://192.168.75.7/api_klinik/edit_pasien.php'),
+        Uri.parse('http://192.168.1.6/api_klinik/edit_pasien.php'),
         body: dataToSend,
       );
       if (respon.statusCode == 200) {

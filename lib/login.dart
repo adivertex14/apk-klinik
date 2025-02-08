@@ -24,7 +24,7 @@ class _LoginState extends State<Login> {
       final response = await http.post(
         // Uri.parse("http://192.168.1.4/api_klinik/login.php"),
         // Uri.parse("http://10.205.66.159/api_klinik/login.php"),
-        Uri.parse("http://192.168.75.7/api_klinik/login.php"),
+        Uri.parse("http://192.168.1.6/api_klinik/login.php"),
         body: {
           "username": userController.text,
           "password": passwordController.text,

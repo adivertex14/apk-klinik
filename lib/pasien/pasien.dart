@@ -36,7 +36,7 @@ class _PasienState extends State<Pasien> {
       final respon = await http
           // .get(Uri.parse('http://192.168.1.4/api_klinik/read_pasien.php'));
           .get(Uri.parse(
-              'http://192.168.75.7/api_klinik/read_pasien.php?id_user=${widget.idUser}'));
+              'http://192.168.1.6/api_klinik/read_pasien.php?id_user=${widget.idUser}'));
       if (respon.statusCode == 200) {
         // print(respon.body);
         final data = jsonDecode(respon.body);
@@ -54,7 +54,7 @@ class _PasienState extends State<Pasien> {
     try {
       final respon = await http
           // .get(Uri.parse('http://192.168.1.4/api_klinik/read_pasien.php'));
-          .post(Uri.parse('http://192.168.75.7/api_klinik/hapus_pasien.php'),
+          .post(Uri.parse('http://192.168.1.6/api_klinik/hapus_pasien.php'),
               body: {
             "nama_pasien": nama,
           });

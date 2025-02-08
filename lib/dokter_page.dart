@@ -59,7 +59,7 @@ class _DokterPageState extends State<DokterPage> {
 
   Future<List<Dokter>> fetchDokter() async {
     final response = await http
-        .get(Uri.parse('http://192.168.75.7/api_klinik/api_dokter2.php'));
+        .get(Uri.parse('http://192.168.1.6/api_klinik/api_dokter2.php'));
 
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
@@ -112,7 +112,7 @@ class _DokterPageState extends State<DokterPage> {
                         CircleAvatar(
                           radius: 37.5,
                           backgroundImage: NetworkImage(
-                              'http://192.168.75.7/${dokter.fotoDokter}'),
+                              'http://192.168.1.6/${dokter.fotoDokter}'),
                         ),
                         const SizedBox(width: 20),
                         Expanded(

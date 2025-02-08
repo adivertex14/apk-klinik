@@ -30,7 +30,7 @@ class _TambahPasienState extends State<TambahPasien> {
     try {
       final respon = await http.post(
         // Uri.parse('http://192.168.1.4/api_klinik/create_pasien.php'),
-        Uri.parse('http://192.168.75.7/api_klinik/create_pasien.php'),
+        Uri.parse('http://192.168.1.6/api_klinik/create_pasien.php'),
         body: {
           "nama_pasien": _namaController.text,
           "jenis_kelamin": _jenisKelamin == JenisKelamin.lakiLaki
